@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "tudigong:block/tudi_temple",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "tudigong:block/tudi_temple"
+    },
+    "facing=south": {
+      "model": "tudigong:block/tudi_temple",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "tudigong:block/tudi_temple",
+      "y": 270
+    }
+  }
+}

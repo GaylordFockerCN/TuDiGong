@@ -1,0 +1,29 @@
+{
+  "criteria": {
+    "sincerity": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "display": {
+    "announce_to_chat": false,
+    "background": "cataclysm:textures/block/azure_seastone_bricks.png",
+    "description": {
+      "translate": "advancement.sincerity.sincerity.desc"
+    },
+    "frame": "task",
+    "hidden": false,
+    "icon": {
+      "item": "cataclysm:storm_eye"
+    },
+    "show_toast": false,
+    "title": {
+      "translate": "block.tudigong.tudi_temple.usage"
+    }
+  },
+  "requirements": [
+    [
+      "sincerity"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

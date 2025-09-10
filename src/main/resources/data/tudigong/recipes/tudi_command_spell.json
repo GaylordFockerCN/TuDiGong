@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern":
+  [
+    " B ",
+    " S ",
+    "   "
+  ],
+  "key":
+  {
+    "B": { "item" : "minecraft:paper" },
+    "S": { "item" : "minecraft:redstone" }
+  },
+  "result":
+  {
+    "item" : "tudigong:tudi_command_spell",
+    "count" : 1
+  }
+}
