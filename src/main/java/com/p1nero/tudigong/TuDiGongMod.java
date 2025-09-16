@@ -10,6 +10,8 @@ import com.p1nero.tudigong.item.TDGItemTabs;
 import com.p1nero.tudigong.item.TDGItems;
 import com.p1nero.tudigong.network.TDGPacketHandler;
 import com.p1nero.tudigong.network.packet.client.SyncResourceKeysPacket;
+import net.minecraft.advancements.Advancement;
+import net.minecraft.advancements.AdvancementProgress;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Registry;
@@ -85,6 +87,7 @@ public class TuDiGongMod {
             if(serverPlayer.level().getBlockState(serverPlayer.getOnPos().below()).is(BlockTags.DIRT)) {
                 TudiGongEntity tudiGongEntity = TDGEntities.TU_DI_GONG.get().spawn(serverPlayer.serverLevel(), serverPlayer.getOnPos().above(1), MobSpawnType.MOB_SUMMONED);
                 if(tudiGongEntity != null) {
+                    finishAdvancement(TuDiGongMod.MOD_ID + ":sincerity", serverPlayer);
                     serverPlayer.displayClientMessage(ComponentUtils.wrapInSquareBrackets(tudiGongEntity.getDisplayName()).append(": ").append(Component.translatable("entity.tudigong.tudigong.dialog1")), false);
                 }
             }
@@ -122,6 +125,9 @@ public class TuDiGongMod {
                         serverLevel.getEntitiesOfClass(Player.class, (new AABB(center, center)).inflate(3)).forEach(player -> {
                             player.addEffect(new MobEffectInstance(MobEffects.LUCK, 2400, 1, false, false, true));
                         });
+                        if(event.getEntity() instanceof ServerPlayer serverPlayer) {
+                            finishAdvancement(TuDiGongMod.MOD_ID + ":sincerity2", serverPlayer);
+                        }
                         break;
                     }
                 }
@@ -140,6 +146,24 @@ public class TuDiGongMod {
         var pack = Pack.readMetaAndCreate(name, Component.literal(name), true,
                 (path) -> new PathPackResources(path, resourcePath, false), PackType.SERVER_DATA, Pack.Position.TOP, PackSource.WORLD);
         event.addRepositorySource((packConsumer) -> packConsumer.accept(pack));
+    }
+
+    public static void finishAdvancement(Advancement advancement, ServerPlayer serverPlayer) {
+        AdvancementProgress progress = serverPlayer.getAdvancements().getOrStartProgress(advancement);
+        if (!progress.isDone()) {
+            for (String criteria : progress.getRemainingCriteria()) {
+                serverPlayer.getAdvancements().award(advancement, criteria);
+            }
+        }
+    }
+
+    public static void finishAdvancement(String resourceLocation, ServerPlayer serverPlayer) {
+        Advancement advancement = serverPlayer.server.getAdvancements().getAdvancement(ResourceLocation.parse(resourceLocation));
+        if (advancement == null) {
+            LOGGER.error("advancement:\"{}\" is null!", resourceLocation);
+            return;
+        }
+        finishAdvancement(advancement, serverPlayer);
     }
 
 }

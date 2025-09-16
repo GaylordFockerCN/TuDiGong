@@ -1,12 +1,14 @@
 package com.p1nero.tudigong.item.custom;
 
 import com.p1nero.tudigong.TDGConfig;
+import com.p1nero.tudigong.TuDiGongMod;
 import com.p1nero.tudigong.entity.TDGEntities;
 import com.p1nero.tudigong.entity.TudiGongEntity;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentUtils;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.MobSpawnType;
@@ -39,6 +41,7 @@ public class TuDiCommandSpellItem extends Item {
                     context.getPlayer().displayClientMessage(ComponentUtils.wrapInSquareBrackets(tudiGongEntity.getDisplayName()).append(": ").append(Component.translatable("entity.tudigong.tudigong.dialog1")), false);
                     context.getPlayer().getCooldowns().addCooldown(context.getItemInHand().getItem(), TDGConfig.SPELL_COOLDOWN.get());
                     context.getItemInHand().shrink(1);
+                    TuDiGongMod.finishAdvancement(TuDiGongMod.MOD_ID + ":sincerity", (ServerPlayer) context.getPlayer());
                 }
             }
         }

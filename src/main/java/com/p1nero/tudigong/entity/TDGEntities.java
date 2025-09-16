@@ -16,7 +16,7 @@ public class TDGEntities {
     public static final DeferredRegister<EntityType<?>> REGISTRY = DeferredRegister.create(ForgeRegistries.ENTITY_TYPES, TuDiGongMod.MOD_ID);
 
     public static final RegistryObject<EntityType<TudiGongEntity>> TU_DI_GONG = register("tudigong",
-                    EntityType.Builder.of(TudiGongEntity::new, MobCategory.CREATURE).sized(0.5f, 1.5f).fireImmune());
+                    EntityType.Builder.of(TudiGongEntity::new, MobCategory.CREATURE).sized(0.5f, 1.5f).noSave().fireImmune());
 
     private static <T extends Entity> RegistryObject<EntityType<T>> register(String name, EntityType.Builder<T> entityTypeBuilder) {
         return REGISTRY.register(name, () -> entityTypeBuilder.build(ResourceLocation.fromNamespaceAndPath(TuDiGongMod.MOD_ID, name).toString()));

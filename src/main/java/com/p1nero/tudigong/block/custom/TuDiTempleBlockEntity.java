@@ -1,5 +1,6 @@
 package com.p1nero.tudigong.block.custom;
 
+import com.p1nero.tudigong.TuDiGongMod;
 import com.p1nero.tudigong.block.TDGBlockEntities;
 import com.p1nero.tudigong.entity.TDGEntities;
 import com.p1nero.tudigong.entity.TudiGongEntity;
@@ -63,6 +64,7 @@ public class TuDiTempleBlockEntity extends BlockEntity {
                                 tudiGongEntity.setHomePos(pPos);
                                 tudiGongEntity.setYRot(this.getBlockState().getValue(BlockStateProperties.HORIZONTAL_FACING).getOpposite().toYRot());
                                 serverPlayer.displayClientMessage(ComponentUtils.wrapInSquareBrackets(tudiGongEntity.getDisplayName()).append(": ").append(Component.translatable("entity.tudigong.tudigong.dialog1")), false);
+                                TuDiGongMod.finishAdvancement(TuDiGongMod.MOD_ID + ":sincerity", serverPlayer);
                             }
                             shiftCount = 0;
                         }

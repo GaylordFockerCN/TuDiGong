@@ -1,6 +1,7 @@
 {
+  "parent": "tudigong:sincerity",
   "criteria": {
-    "sincerity": {
+    "sincerity2": {
       "trigger": "minecraft:impossible"
     }
   },
@@ -8,21 +9,21 @@
     "announce_to_chat": true,
     "background": "minecraft:textures/block/bricks.png",
     "description": {
-      "translate": "advancement.sincerity.sincerity.desc"
+      "translate": "advancement.sincerity.sincerity2.desc"
     },
     "frame": "task",
     "hidden": false,
     "icon": {
-      "item": "tudigong:tudi_temple"
+      "item": "minecraft:torch"
     },
     "show_toast": true,
     "title": {
-      "translate": "block.tudigong.tudi_temple"
+      "translate": "block.tudigong.tudi_temple.usage"
     }
   },
   "requirements": [
     [
-      "sincerity"
+      "sincerity2"
     ]
   ],
   "sends_telemetry_event": true
