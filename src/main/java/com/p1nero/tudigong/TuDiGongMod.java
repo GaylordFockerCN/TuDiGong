@@ -51,6 +51,7 @@ import org.slf4j.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 @Mod(TuDiGongMod.MOD_ID)
 public class TuDiGongMod {
@@ -79,12 +80,15 @@ public class TuDiGongMod {
     }
 
     private void onServerChat(ServerChatEvent event) {
-        if(event.getRawText().contains("土地") || event.getRawText().contains("TuDi")) {
+        if(event.getRawText().contains("土地") || event.getRawText().toLowerCase(Locale.ROOT).contains("tudi")) {
             ServerPlayer serverPlayer = event.getPlayer();
             if(!serverPlayer.hasPermissions(2)) {
                 return;
             }
-            if(serverPlayer.level().getBlockState(serverPlayer.getOnPos().below()).is(BlockTags.DIRT)) {
+            ServerLevel serverLevel = serverPlayer.serverLevel();
+            Vec3 center = serverPlayer.position();
+            if(serverPlayer.level().getBlockState(serverPlayer.getOnPos().below()).is(BlockTags.DIRT)
+                && serverLevel.getEntitiesOfClass(TudiGongEntity.class, (new AABB(center, center)).inflate(10)).isEmpty()) {
                 TudiGongEntity tudiGongEntity = TDGEntities.TU_DI_GONG.get().spawn(serverPlayer.serverLevel(), serverPlayer.getOnPos().above(1), MobSpawnType.MOB_SUMMONED);
                 if(tudiGongEntity != null) {
                     finishAdvancement(TuDiGongMod.MOD_ID + ":sincerity", serverPlayer);

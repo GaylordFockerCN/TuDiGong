@@ -11,6 +11,7 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
@@ -64,9 +65,10 @@ public class XianQiEntity extends PathfinderMob {
                 level().addParticle(ParticleTypes.END_ROD, position.x, position.y + 0.5, position.z, 0, 0, 0);
             }
         } else {
-            Vec3 dir;
             if(owner != null) {
-                dir = targetPos.subtract(owner.getEyePosition()).normalize().add(0, 0.1, 0);
+                Vec3 totalDir = targetPos.subtract(owner.getEyePosition()).normalize();
+                Vec3 goalPos = owner.getEyePosition().add(totalDir.scale(10));
+                Vec3 dir = goalPos.subtract(this.position()).normalize();
                 double dis1 = this.distanceTo(owner);
                 if(dis1 < 3) {
                     this.setDeltaMovement(dir.scale(0.25));

@@ -35,12 +35,10 @@ public record SyncResourceKeysPacket(List<ResourceLocation> resourceLocations, b
     public void execute(@Nullable Player playerEntity) {
         if(Minecraft.getInstance().level != null) {
             if(isStructure) {
-                StructureSearchScreen.STRUCTURE_NAME_MAP.clear();
                 resourceLocations.forEach((resourceLocation -> {
                     StructureSearchScreen.STRUCTURE_NAME_MAP.put(resourceLocation, WorldUtil.getStructureName(resourceLocation));
                 }));
             } else {
-                BiomeSearchScreen.BIOMIE_NAME_MAP.clear();
                 resourceLocations.forEach((resourceLocation -> {
                     BiomeSearchScreen.BIOMIE_NAME_MAP.put(resourceLocation, WorldUtil.getBiomeName(resourceLocation));
                 }));
