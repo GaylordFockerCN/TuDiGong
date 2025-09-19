@@ -4,6 +4,7 @@ import com.p1nero.dialog_lib.api.NpcDialogueEntity;
 import com.p1nero.dialog_lib.api.goal.LookAtConservingPlayerGoal;
 import com.p1nero.dialog_lib.client.screen.DialogueScreenBuilder;
 import com.p1nero.tudigong.TDGConfig;
+import com.p1nero.tudigong.TuDiGongMod;
 import com.p1nero.tudigong.block.custom.TuDiTempleBlockEntity;
 import com.p1nero.tudigong.client.screen.BiomeSearchScreen;
 import com.p1nero.tudigong.client.screen.StructureSearchScreen;
@@ -15,6 +16,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
@@ -49,6 +51,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class TudiGongEntity extends PathfinderMob implements NpcDialogueEntity {
     private Player conservingPlayer;
+    private boolean markRemoved;
     private static final EntityDataAccessor<Integer> REMOVE_TIMER = SynchedEntityData.defineId(TudiGongEntity.class, EntityDataSerializers.INT);
     public final int maxRemoveTime = 60;
     public final int maxLifeTime = 1200;
@@ -75,6 +78,7 @@ public class TudiGongEntity extends PathfinderMob implements NpcDialogueEntity {
 
     public void setRemoved() {
         this.setRemoveTimer(maxRemoveTime);
+        markRemoved = true;
     }
 
     public void countRemove() {
@@ -83,6 +87,9 @@ public class TudiGongEntity extends PathfinderMob implements NpcDialogueEntity {
             this.setRemoveTimer(this.getRemoveTimer() - 1);
         }
         if (timer == 1) {
+            this.noticeHomeAndDiscard();
+        }
+        if(markRemoved && timer <= 0) {
             this.noticeHomeAndDiscard();
         }
     }
@@ -177,13 +184,20 @@ public class TudiGongEntity extends PathfinderMob implements NpcDialogueEntity {
                 }
             }
             countRemove();
-            if(canInteract() && tickCount > maxLifeTime + maxRemoveTime && this.getConversingPlayer() == null) {
-                this.noticeHomeAndDiscard();//保险
+
+            if(canInteract() && tickCount > maxLifeTime) {
+                this.setRemoved();
             }
+
+            if(this.conservingPlayer != null) {
+                this.tickCount = maxRemoveTime;//刷新计时
+            }
+
         }
     }
 
     public void noticeHomeAndDiscard() {
+        markRemoved = true;
         if(this.homePos != null) {
             if(level().getBlockEntity(this.homePos) instanceof TuDiTempleBlockEntity tuDiTempleBlockEntity) {
                 tuDiTempleBlockEntity.reset();
@@ -225,6 +239,8 @@ public class TudiGongEntity extends PathfinderMob implements NpcDialogueEntity {
     @Override
     protected @NotNull InteractionResult mobInteract(@NotNull Player player, @NotNull InteractionHand hand) {
         if (canInteract() && player instanceof ServerPlayer serverPlayer) {
+            TuDiGongMod.syncRegistry(serverPlayer, Registries.STRUCTURE);
+            TuDiGongMod.syncRegistry(serverPlayer, Registries.BIOME);
             sendDialogTo(serverPlayer);
         }
         return InteractionResult.CONSUME;

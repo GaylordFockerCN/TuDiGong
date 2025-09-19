@@ -142,6 +142,13 @@ repositories {
             includeGroup "curse.maven"
         }
     }
+
+
+    maven {
+        name = 'GeckoLib'
+        url 'https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/'
+    }
+
 }
 
 dependencies {
@@ -161,6 +168,16 @@ dependencies {
     implementation fg.deobf("curse.maven:journeymap-32274:5789363")//旅行地图
 
     implementation fg.deobf("curse.maven:lithostitched-936015:6742615")//村庄插入
+
+    implementation fg.deobf("libs:trek:B0.5.1")
+    implementation fg.deobf("curse.maven:towns-and-towers-626761:4923828")
+    implementation fg.deobf("curse.maven:cristel-lib-856996:5869180")
+
+    implementation fg.deobf("curse.maven:changshengjue-1321085:6871178")
+    implementation fg.deobf("curse.maven:patchouli-306770:6164575")
+    implementation fg.deobf("curse.maven:terrablender-563928:6290448")
+    implementation fg.deobf("software.bernie.geckolib:geckolib-forge-1.20.1:4.7.3")
+
 
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
 

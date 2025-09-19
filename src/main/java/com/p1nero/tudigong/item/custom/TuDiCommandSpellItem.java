@@ -45,7 +45,7 @@ public class TuDiCommandSpellItem extends Item {
                 }
             }
         }
-        return super.useOn(context);
+        return InteractionResult.sidedSuccess(context.getLevel().isClientSide);
     }
 
     @Override

@@ -104,7 +104,7 @@ public class TuDiGongMod {
         }
     }
 
-    private void syncRegistry(ServerPlayer serverPlayer, ResourceKey<? extends Registry<?>> registry) {
+    public static void syncRegistry(ServerPlayer serverPlayer, ResourceKey<? extends Registry<?>> registry) {
         List<ResourceLocation> resourceLocations = new ArrayList<>();
         serverPlayer.serverLevel().registryAccess().lookup(registry).ifPresent(registryLookup -> {
             registryLookup.listElementIds().forEach((resourceKey -> {

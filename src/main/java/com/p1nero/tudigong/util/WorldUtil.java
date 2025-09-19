@@ -1,6 +1,7 @@
 package com.p1nero.tudigong.util;
 
 import com.p1nero.tudigong.client.screen.StructureSearchScreen;
+import dev.worldgen.lithostitched.config.ConfigHandler;
 import net.minecraft.Util;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.commands.CommandSourceStack;
@@ -20,6 +21,7 @@ import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import org.apache.commons.lang3.text.WordUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -149,7 +151,15 @@ public class WorldUtil {
 
     @OnlyIn(Dist.CLIENT)
     public static String getStructureName(ResourceLocation key) {
-        return I18n.get(Util.makeDescriptionId("structure", key));
+        String name = I18n.get(Util.makeDescriptionId("structure", key));
+        if (name.equals(Util.makeDescriptionId("structure", key))) {
+            name = key.toString();
+            if (name.contains(":")) {
+                name = name.substring(name.indexOf(":") + 1);
+            }
+            name = WordUtils.capitalize(name.replace('_', ' '));
+        }
+        return name;
     }
 
     @OnlyIn(Dist.CLIENT)
