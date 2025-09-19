@@ -1,5 +1,6 @@
 package com.p1nero.tudigong.block.custom;
 
+import com.p1nero.tudigong.TDGConfig;
 import com.p1nero.tudigong.TuDiGongMod;
 import com.p1nero.tudigong.block.TDGBlockEntities;
 import com.p1nero.tudigong.entity.TDGEntities;
@@ -49,6 +50,9 @@ public class TuDiTempleBlockEntity extends BlockEntity {
         Vec3 center = pPos.getCenter();
         pLevel.getEntitiesOfClass(Player.class, (new AABB(center, center)).inflate(3)).forEach(player -> {
             if(player instanceof ServerPlayer serverPlayer) {
+                if(TDGConfig.GUIDE_MODE.get()) {
+                    serverPlayer.displayClientMessage(Component.translatable("block.tudigong.tudi_temple.tip"), true);
+                }
                 if(tudiGongEntity == null && cooldown <= 0) {
                     if(serverPlayer.isShiftKeyDown()) {
                         if(release) {
@@ -65,6 +69,7 @@ public class TuDiTempleBlockEntity extends BlockEntity {
                                 tudiGongEntity.setYRot(this.getBlockState().getValue(BlockStateProperties.HORIZONTAL_FACING).getOpposite().toYRot());
                                 serverPlayer.displayClientMessage(ComponentUtils.wrapInSquareBrackets(tudiGongEntity.getDisplayName()).append(": ").append(Component.translatable("entity.tudigong.tudigong.dialog1")), false);
                                 TuDiGongMod.finishAdvancement(TuDiGongMod.MOD_ID + ":sincerity", serverPlayer);
+                                TDGConfig.GUIDE_MODE.set(false);
                             }
                             shiftCount = 0;
                         }

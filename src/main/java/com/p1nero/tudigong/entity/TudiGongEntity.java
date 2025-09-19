@@ -141,7 +141,7 @@ public class TudiGongEntity extends PathfinderMob implements NpcDialogueEntity {
                             offsetZ              // Z轴随机偏移
                     );
                     level().addParticle(
-                            ParticleTypes.CLOUD, // 烟雾粒子
+                            ParticleTypes.CLOUD, // 云粒子
                             this.getX(),         // 当前位置X
                             this.getY(),   // 当前位置Y）
                             this.getZ(),         // 当前位置Z
@@ -288,6 +288,12 @@ public class TudiGongEntity extends PathfinderMob implements NpcDialogueEntity {
             XaeroMapCompat.sendWaypoint(serverPlayer, resourceLocation.toString(), blockpos);
             JourneyMapCompat.sendWaypoint(serverPlayer, resourceLocation.toString(), blockpos);
         }
+
+        if (TDGConfig.SPAWN_GUIDER.get()) {
+            XianQiEntity xianQiEntity = new XianQiEntity(level(), blockpos.getCenter(), serverPlayer);
+            level().addFreshEntity(xianQiEntity);
+        }
+
         serverPlayer.displayClientMessage(ComponentUtils.wrapInSquareBrackets(this.getDisplayName()).append(": ").append(Component.translatable("entity.tudigong.tudigong.dialog3")), false);
         serverPlayer.displayClientMessage(ComponentUtils.wrapInSquareBrackets(this.getDisplayName()).append(": ").append(Component.translatable("entity.tudigong.tudigong.dialog4")), false);
         from = this.getEyePosition();
