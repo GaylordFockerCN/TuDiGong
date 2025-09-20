@@ -1,5 +1,5 @@
 {
-  "entity.tudigong.tudigong": "土地公",
+  "entity.tudigong.tudigong": "地祇",
   "button.tudigong.ask": "叩問",
   "entity.tudigong.tudigong.dialog0": "放肆！安敢對吾不敬！",
   "entity.tudigong.tudigong.choice0": "小可不敢！",
@@ -11,13 +11,13 @@
   "entity.tudigong.tudigong.dialog5": "此...小神亦不知也",
   "block.tudigong.tudi_temple": "土地廟",
   "block.tudigong.tudi_temple.usage": "心誠則靈",
-  "block.tudigong.tudi_temple.tip": "潜行三次或奉上火把以示尊重",
-  "entity.tudigong.xian_qi.tip": "已抵达目的地附近，本次导航结束。",
+  "block.tudigong.tudi_temple.tip": "潜行三匝或奉炬示虔",
+  "entity.tudigong.xian_qi.tip": "已抵终处之隅，斯导毕焉",
   "advancement.sincerity.sincerity2.desc": "祈福于土地廟",
   "advancement.sincerity.sincerity.desc": "召役土地",
   "tip.tudigong.summon": "雷霆律令，召役土地。里域正神，聞呪速臨，急急如律令！",
-  "item.tudigong.tudi_command_spell": "土地公令呪",
-  "item.tudigong.tudi_command_spell.usage": "右击泥土以召役土地",
+  "item.tudigong.tudi_command_spell": "土地令呪",
+  "item.tudigong.tudi_command_spell.usage": "右叩坤土以召役地祇",
 
   "structure.minecraft.ancient_city": "上古虛",
   "structure.minecraft.bastion_remnant": "壘障遺",
@@ -54,6 +54,5 @@
   "structure.minecraft.village_plains": "原上邑",
   "structure.minecraft.village_savanna": "熱原邑",
   "structure.minecraft.village_snowy": "雪野邑",
-  "structure.minecraft.village_taiga": "寒林邑",
-  "item.tudigong.tudi_command_spell。usage": "Right Click Dirtlike Block to summon Tu Di Gong"
+  "structure.minecraft.village_taiga": "寒林邑"
 }
