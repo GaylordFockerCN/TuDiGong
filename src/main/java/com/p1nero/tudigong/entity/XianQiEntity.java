@@ -2,6 +2,8 @@ package com.p1nero.tudigong.entity;
 
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -11,7 +13,6 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
@@ -19,6 +20,7 @@ import org.jetbrains.annotations.NotNull;
 public class XianQiEntity extends PathfinderMob {
     private Vec3 targetPos = Vec3.ZERO;
     private LivingEntity owner;
+    private int discardDis = 20;
     public XianQiEntity(EntityType<? extends PathfinderMob> type, Level level) {
         super(type, level);
         this.noPhysics = true;
@@ -29,6 +31,10 @@ public class XianQiEntity extends PathfinderMob {
         this.targetPos = targetPos;
         this.owner = owner;
         this.setPos(owner.position());
+    }
+
+    public void setDiscardDis(int discardDis) {
+        this.discardDis = discardDis;
     }
 
     public void setTargetPos(Vec3 targetPos) {
@@ -65,6 +71,9 @@ public class XianQiEntity extends PathfinderMob {
                 level().addParticle(ParticleTypes.END_ROD, position.x, position.y + 0.5, position.z, 0, 0, 0);
             }
         } else {
+            if(tickCount % 40 == 0) {
+                level().playSound(null, getX(), getY(), getZ(), random.nextBoolean() ? SoundEvents.AMETHYST_CLUSTER_STEP : SoundEvents.AMETHYST_BLOCK_STEP, SoundSource.BLOCKS, 1.0F, 1.0F);
+            }
             if(owner != null) {
                 Vec3 totalDir = targetPos.subtract(owner.getEyePosition()).normalize();
                 Vec3 goalPos = owner.getEyePosition().add(totalDir.scale(10));
@@ -86,7 +95,7 @@ public class XianQiEntity extends PathfinderMob {
                 this.setPos(owner.getEyePosition());
             }
 
-            if(this.distanceToSqr(targetPos) < 400) {
+            if(this.distanceToSqr(targetPos) < discardDis * discardDis) {
                 Vec3 center = this.position();
                 level().getEntitiesOfClass(Player.class, (new AABB(center, center)).inflate(10)).forEach(player -> {
                     player.displayClientMessage(Component.translatable("entity.tudigong.xian_qi.tip"), false);
