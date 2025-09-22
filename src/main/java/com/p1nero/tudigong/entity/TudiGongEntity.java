@@ -1,6 +1,6 @@
 package com.p1nero.tudigong.entity;
 
-import com.p1nero.dialog_lib.api.NpcDialogueEntity;
+import com.p1nero.dialog_lib.api.IEntityNpc;
 import com.p1nero.dialog_lib.api.goal.LookAtConservingPlayerGoal;
 import com.p1nero.dialog_lib.client.screen.DialogueScreenBuilder;
 import com.p1nero.tudigong.TDGConfig;
@@ -49,7 +49,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class TudiGongEntity extends PathfinderMob implements NpcDialogueEntity {
+public class TudiGongEntity extends PathfinderMob implements IEntityNpc {
     private Player conservingPlayer;
     private boolean markRemoved;
     private static final EntityDataAccessor<Integer> REMOVE_TIMER = SynchedEntityData.defineId(TudiGongEntity.class, EntityDataSerializers.INT);

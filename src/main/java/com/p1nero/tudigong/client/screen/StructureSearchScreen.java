@@ -3,12 +3,11 @@ package com.p1nero.tudigong.client.screen;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import com.p1nero.dialog_lib.network.DialoguePacketRelay;
-import com.p1nero.dialog_lib.network.packet.serverbound.NpcEntityPlayerInteractPacket;
+import com.p1nero.dialog_lib.network.packet.serverbound.HandleNpcEntityPlayerInteractPacket;
 import com.p1nero.tudigong.client.widget.ResourceList;
 import com.p1nero.tudigong.network.TDGPacketHandler;
 import com.p1nero.tudigong.network.packet.server.HandleSearchPacket;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.Screen;
@@ -16,7 +15,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import org.jetbrains.annotations.NotNull;
 import org.lwjgl.glfw.GLFW;
 
 @OnlyIn(Dist.CLIENT)
@@ -94,7 +92,7 @@ public class StructureSearchScreen extends Screen {
     public void onClose() {
         super.onClose();
         if(!found) {
-            DialoguePacketRelay.sendToServer(new NpcEntityPlayerInteractPacket(tudigongId, 0));
+            DialoguePacketRelay.sendToServer(new HandleNpcEntityPlayerInteractPacket(tudigongId, 0));
         }
     }
 

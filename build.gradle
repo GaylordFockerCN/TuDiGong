@@ -161,7 +161,7 @@ dependencies {
 
 //    implementation fg.deobf("curse.maven:p1neros-dialogue-lib-1274526:6971469")
 
-    implementation fg.deobf("libs:p1nero_dl:1.4.1")
+    implementation fg.deobf("libs:p1nero_dl:1.5.0")
 
     implementation fg.deobf("curse.maven:xaeros-world-map-317780:6212636")//大地图
     implementation fg.deobf("curse.maven:xaeros-minimap-263420:6306152")//小地图

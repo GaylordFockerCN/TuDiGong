@@ -3,7 +3,7 @@ package com.p1nero.tudigong.client.screen;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import com.p1nero.dialog_lib.network.DialoguePacketRelay;
-import com.p1nero.dialog_lib.network.packet.serverbound.NpcEntityPlayerInteractPacket;
+import com.p1nero.dialog_lib.network.packet.serverbound.HandleNpcEntityPlayerInteractPacket;
 import com.p1nero.tudigong.client.widget.ResourceList;
 import com.p1nero.tudigong.network.TDGPacketHandler;
 import com.p1nero.tudigong.network.packet.server.HandleSearchPacket;
@@ -92,7 +92,7 @@ public class BiomeSearchScreen extends Screen {
     public void onClose() {
         super.onClose();
         if (!found) {
-            DialoguePacketRelay.sendToServer(new NpcEntityPlayerInteractPacket(tudigongId, 0));
+            DialoguePacketRelay.sendToServer(new HandleNpcEntityPlayerInteractPacket(tudigongId, 0));
         }
     }
 
