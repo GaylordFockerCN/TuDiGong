@@ -272,7 +272,7 @@ public class TudiGongEntity extends PathfinderMob implements IEntityNpc {
         this.setConversingPlayer(null);
         BlockPos blockpos = isStructure ? WorldUtil.getNearbyStructurePos(serverPlayer, resourceLocation.toString(), -1145) : WorldUtil.getNearbyBiomePos(serverPlayer, resourceLocation.toString());
         if(blockpos == null) {
-            serverPlayer.displayClientMessage(ComponentUtils.wrapInSquareBrackets(this.getDisplayName()).append(": ").append(Component.translatable("entity.tudigong.tudigong.dialog5")), false);
+            serverPlayer.displayClientMessage(ComponentUtils.wrapInSquareBrackets(this.getDisplayName()).append(": ").append(Component.translatable("entity.tudigong.tudigong.answer5")), false);
             return;
         }
         String s = blockpos.getY() == -1145 ? "~" : String.valueOf(blockpos.getY());
@@ -294,8 +294,8 @@ public class TudiGongEntity extends PathfinderMob implements IEntityNpc {
             level().addFreshEntity(xianQiEntity);
         }
 
-        serverPlayer.displayClientMessage(ComponentUtils.wrapInSquareBrackets(this.getDisplayName()).append(": ").append(Component.translatable("entity.tudigong.tudigong.dialog3")), false);
-        serverPlayer.displayClientMessage(ComponentUtils.wrapInSquareBrackets(this.getDisplayName()).append(": ").append(Component.translatable("entity.tudigong.tudigong.dialog4")), false);
+        serverPlayer.displayClientMessage(ComponentUtils.wrapInSquareBrackets(this.getDisplayName()).append(": ").append(Component.translatable("entity.tudigong.tudigong.answer3")), false);
+        serverPlayer.displayClientMessage(ComponentUtils.wrapInSquareBrackets(this.getDisplayName()).append(": ").append(Component.translatable("entity.tudigong.tudigong.answer4")), false);
         from = this.getEyePosition();
         Vec3 target = blockpos.atY((int) this.getEyeY()).getCenter();
         dir = target.subtract(from).normalize();
