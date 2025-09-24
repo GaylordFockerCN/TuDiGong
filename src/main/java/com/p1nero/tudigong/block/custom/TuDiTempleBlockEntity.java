@@ -67,7 +67,7 @@ public class TuDiTempleBlockEntity extends BlockEntity {
                             if(tudiGongEntity != null) {
                                 tudiGongEntity.setHomePos(pPos);
                                 tudiGongEntity.setYRot(this.getBlockState().getValue(BlockStateProperties.HORIZONTAL_FACING).getOpposite().toYRot());
-                                serverPlayer.displayClientMessage(ComponentUtils.wrapInSquareBrackets(tudiGongEntity.getDisplayName()).append(": ").append(Component.translatable("entity.tudigong.tudigong.dialog1")), false);
+                                serverPlayer.displayClientMessage(ComponentUtils.wrapInSquareBrackets(tudiGongEntity.getDisplayName()).append(": ").append(Component.translatable("entity.tudigong.tudigong.answer1")), false);
                                 TuDiGongMod.finishAdvancement(TuDiGongMod.MOD_ID + ":sincerity", serverPlayer);
                                 TDGConfig.GUIDE_MODE.set(false);
                             }

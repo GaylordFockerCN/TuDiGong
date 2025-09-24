@@ -82,14 +82,14 @@ public class TudiGongEntity extends PathfinderMob implements IEntityNpc {
     }
 
     public void countRemove() {
+        if(!markRemoved || level().isClientSide) {
+            return;
+        }
         int timer = this.getRemoveTimer();
         if (timer > 0) {
-            this.setRemoveTimer(this.getRemoveTimer() - 1);
+            this.setRemoveTimer(timer - 1);
         }
-        if (timer == 1) {
-            this.noticeHomeAndDiscard();
-        }
-        if(markRemoved && timer <= 0) {
+        if (timer <= 1) {
             this.noticeHomeAndDiscard();
         }
     }
@@ -155,6 +155,9 @@ public class TudiGongEntity extends PathfinderMob implements IEntityNpc {
                 level().addParticle(ParticleTypes.CLOUD, position.x, position.y + 0.5, position.z, 0, 0, 0);
             }
 
+            if(this.getRemoveTimer() == 1){
+                this.discard();//保险？
+            }
         } else {
             if (tickCount > maxLifeTime && this.getConversingPlayer() == null) {
                 this.setRemoved();

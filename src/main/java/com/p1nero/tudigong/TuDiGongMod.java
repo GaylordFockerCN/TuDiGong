@@ -92,7 +92,7 @@ public class TuDiGongMod {
                 TudiGongEntity tudiGongEntity = TDGEntities.TU_DI_GONG.get().spawn(serverPlayer.serverLevel(), serverPlayer.getOnPos().above(1), MobSpawnType.MOB_SUMMONED);
                 if(tudiGongEntity != null) {
                     finishAdvancement(TuDiGongMod.MOD_ID + ":sincerity", serverPlayer);
-                    serverPlayer.displayClientMessage(ComponentUtils.wrapInSquareBrackets(tudiGongEntity.getDisplayName()).append(": ").append(Component.translatable("entity.tudigong.tudigong.dialog1")), false);
+                    serverPlayer.displayClientMessage(ComponentUtils.wrapInSquareBrackets(tudiGongEntity.getDisplayName()).append(": ").append(Component.translatable("entity.tudigong.tudigong.answer1")), false);
                 }
             }
         }
