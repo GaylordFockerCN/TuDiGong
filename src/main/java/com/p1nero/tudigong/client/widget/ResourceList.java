@@ -1,6 +1,7 @@
 package com.p1nero.tudigong.client.widget;
 
 import com.google.common.collect.BiMap;
+import com.p1nero.tudigong.compat.JECharactersIntegration;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.EditBox;
@@ -13,8 +14,8 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Comparator;
+import java.util.Map;
 import java.util.Set;
-import java.util.stream.Stream;
 
 @OnlyIn(Dist.CLIENT)
 public class ResourceList extends ObjectSelectionList<ResourceList.Entry> {
@@ -22,15 +23,19 @@ public class ResourceList extends ObjectSelectionList<ResourceList.Entry> {
     private final BiMap<ResourceLocation, String> map;
     private final Set<String> names;
     private final Set<ResourceLocation> ids;
+    private final Map<String, Set<ResourceLocation>> tags;
+    private final Map<String, Set<ResourceLocation>> modIds;
     private EditBox box;
 
-    public ResourceList(Minecraft minecraft, int width, int height, int y0, int y1, int itemHeight, BiMap<ResourceLocation, String> map, EditBox box) {
+    public ResourceList(Minecraft minecraft, int width, int height, int y0, int y1, int itemHeight, BiMap<ResourceLocation, String> map, EditBox box, Map<String, Set<ResourceLocation>> tags, Map<String, Set<ResourceLocation>> modIds) {
         super(minecraft, width, height, y0, y1, itemHeight);
         this.setRenderBackground(false);//泥土丑甚
         this.names = map.values();
         this.ids = map.keySet();
         this.map = map;
         this.box = box;
+        this.tags = tags;
+        this.modIds = modIds;
     }
 
     @Override
@@ -66,9 +71,27 @@ public class ResourceList extends ObjectSelectionList<ResourceList.Entry> {
             return;
         }
 
-        // First, try to match by display name (which can be Chinese)
+        if (keyword.length() > 1 && (keyword.startsWith("#") || keyword.startsWith("@"))) {
+            char prefix = keyword.charAt(0);
+            String term = keyword.substring(1).toLowerCase();
+            Map<String, Set<ResourceLocation>> lookupMap = (prefix == '#') ? this.tags : this.modIds;
+
+            if (lookupMap != null && !term.isEmpty() && lookupMap.containsKey(term)) {
+                Set<ResourceLocation> matches = lookupMap.get(term);
+                this.ids.stream()
+                        .filter(matches::contains)
+                        .map(this.map::get)
+                        .filter(java.util.Objects::nonNull)
+                        .sorted()
+                        .map(Entry::new)
+                        .forEach(this::addEntry);
+                return;
+            }
+        }
+
+        // Fallback to default search
         java.util.List<Entry> nameMatches = this.names.stream()
-                .filter(name -> com.p1nero.tudigong.compat.JECharactersIntegration.match(name, keyword))
+                .filter(name -> JECharactersIntegration.match(name, keyword))
                 .sorted()
                 .map(Entry::new)
                 .toList();
@@ -76,10 +99,9 @@ public class ResourceList extends ObjectSelectionList<ResourceList.Entry> {
         if (!nameMatches.isEmpty()) {
             nameMatches.forEach(this::addEntry);
         } else {
-            // If no name matches, try to match by resource location
             this.ids.stream()
-                    .filter(id -> com.p1nero.tudigong.compat.JECharactersIntegration.match(id.toString(), keyword))
-                    .map(this.map::get) // Convert ResourceLocation back to display name
+                    .filter(id -> JECharactersIntegration.match(id.toString(), keyword))
+                    .map(this.map::get)
                     .filter(java.util.Objects::nonNull)
                     .sorted()
                     .map(Entry::new)

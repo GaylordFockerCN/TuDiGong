@@ -6,6 +6,7 @@
   "entity.tudigong.tudigong.answer1": "何方人士在此尋訪本仙？",
   "entity.tudigong.tudigong.option1": "探尋秘境之所",
   "entity.tudigong.tudigong.option2": "請教風水寶地",
+  "entity.tudigong.tudigong.option3": "告辭",
   "entity.tudigong.tudigong.answer3": "循仙氣而往，自得洞天福地！",
   "entity.tudigong.tudigong.answer4": "去也！去也！",
   "entity.tudigong.tudigong.answer5": "此...小神亦不知也",
@@ -54,5 +55,24 @@
   "structure.minecraft.village_plains": "原上邑",
   "structure.minecraft.village_savanna": "熱原邑",
   "structure.minecraft.village_snowy": "雪野邑",
-  "structure.minecraft.village_taiga": "寒林邑"
+  "structure.minecraft.village_taiga": "寒林邑",
+  "message.tudigong.found_title": "已寻得！",
+  "message.tudigong.location_found": "从此去%s %s里，有%s",
+  "direction.tudigong.north": "北方",
+  "direction.tudigong.northeast": "东北方",
+  "direction.tudigong.east": "东方",
+  "direction.tudigong.southeast": "东南方",
+  "direction.tudigong.south": "南方",
+  "direction.tudigong.southwest": "西南方",
+  "direction.tudigong.west": "西方",
+  "direction.tudigong.northwest": "西北方",
+
+  "command.tudigong.help.header": "--- 地祇模組指令 ---",
+  "command.tudigong.help.export": "/tudigong export_structures [語種] - 導出結構數據及譯名",
+  "command.tudigong.help.reload": "/tudigong reload_tags - 重載結構標籤文件",
+  "command.tudigong.help.tag_create": "/tudigong tag create <標籤名> - 創建新標籤",
+  "command.tudigong.help.tag_add": "/tudigong tag add <標籤名> <結構ID> - 增結構於標籤",
+  "command.tudigong.help.tag_remove": "/tudigong tag remove <標籤名> <結構ID> - 減結構於標籤",
+  "command.tudigong.help.tag_list": "/tudigong tag list <標籤名> - 列標籤內結構",
+  "command.tudigong.help.tag_list_all": "/tudigong tag list_all - 列所有標籤"
 }

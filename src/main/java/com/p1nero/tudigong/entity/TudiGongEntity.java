@@ -257,13 +257,17 @@ public class TudiGongEntity extends PathfinderMob implements IEntityNpc {
         } else {
             builder.start(1)
                     .addFinalChoice(1, 2, (dialogueScreen -> Minecraft.getInstance().setScreen(new StructureSearchScreen(this.getId()))))
-                    .addFinalChoice(2, 2, (dialogueScreen -> Minecraft.getInstance().setScreen(new BiomeSearchScreen(this.getId()))));
+                    .addFinalChoice(2, 2, (dialogueScreen -> Minecraft.getInstance().setScreen(new BiomeSearchScreen(this.getId()))))
+                    .addFinalChoice(3);
         }
         return builder;
     }
 
     @Override
     public void handleNpcInteraction(ServerPlayer serverPlayer, int i) {
+        if (i == 3) {
+            this.setRemoved();
+        }
         if(i != 2) {
             setConversingPlayer(null);
         }

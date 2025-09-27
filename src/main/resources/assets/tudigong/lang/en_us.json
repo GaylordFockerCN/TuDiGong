@@ -6,6 +6,7 @@
   "entity.tudigong.tudigong.answer1": "Who seeks me here?",
   "entity.tudigong.tudigong.option1": "Ask about structures",
   "entity.tudigong.tudigong.option2": "Ask about biomes",
+  "entity.tudigong.tudigong.option3": "Farewell",
   "entity.tudigong.tudigong.answer3": "Follow the immortal aura, and you shall arrive!",
   "entity.tudigong.tudigong.answer4": "Farewell!",
   "entity.tudigong.tudigong.answer5": "This... even I, a minor deity, am not sure.",
@@ -54,5 +55,24 @@
   "structure.minecraft.village_savanna": "Village Savanna",
   "structure.minecraft.village_snowy": "Village Snowy",
   "structure.minecraft.village_taiga": "Village Taiga",
-  "structure.minecraft.trail_ruins": "Trail Ruins"
+  "structure.minecraft.trail_ruins": "Trail Ruins",
+  "message.tudigong.found_title": "Found!",
+  "message.tudigong.location_found": "%s, %s blocks away, lies a %s",
+  "direction.tudigong.north": "North",
+  "direction.tudigong.northeast": "Northeast",
+  "direction.tudigong.east": "East",
+  "direction.tudigong.southeast": "Southeast",
+  "direction.tudigong.south": "South",
+  "direction.tudigong.southwest": "Southwest",
+  "direction.tudigong.west": "West",
+  "direction.tudigong.northwest": "Northwest",
+
+  "command.tudigong.help.header": "--- TuDiGong Mod Commands ---",
+  "command.tudigong.help.export": "/tudigong export_structures [lang] - Exports structure data with translations.",
+  "command.tudigong.help.reload": "/tudigong reload_tags - Reloads the structure tags file.",
+  "command.tudigong.help.tag_create": "/tudigong tag create <tagName> - Creates a new tag.",
+  "command.tudigong.help.tag_add": "/tudigong tag add <tagName> <structure> - Adds a structure to a tag.",
+  "command.tudigong.help.tag_remove": "/tudigong tag remove <tagName> <structure> - Removes a structure from a tag.",
+  "command.tudigong.help.tag_list": "/tudigong tag list <tagName> - Lists structures in a tag.",
+  "command.tudigong.help.tag_list_all": "/tudigong tag list_all - Lists all defined tags."
 }

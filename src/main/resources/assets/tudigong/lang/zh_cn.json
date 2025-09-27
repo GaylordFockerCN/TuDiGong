@@ -6,6 +6,7 @@
   "entity.tudigong.tudigong.answer1": "何方人士在此寻访本仙？",
   "entity.tudigong.tudigong.option1": "探寻秘境所在",
   "entity.tudigong.tudigong.option2": "请教风水宝地",
+  "entity.tudigong.tudigong.option3": "告辞",
   "entity.tudigong.tudigong.answer3": "循仙气而往，自得洞天福地！",
   "entity.tudigong.tudigong.answer4": "去也！去也！",
   "entity.tudigong.tudigong.answer5": "这个...小神亦不知也",
@@ -54,5 +55,15 @@
   "structure.minecraft.village_plains": "平原村庄",
   "structure.minecraft.village_savanna": "热带草原村庄",
   "structure.minecraft.village_snowy": "雪原村庄",
-  "structure.minecraft.village_taiga": "针叶林村庄"
+  "structure.minecraft.village_taiga": "针叶林村庄",
+  "message.tudigong.found_title": "已找到！",
+  "message.tudigong.location_found": "此去%s方 %s 格处，有 %s",
+  "direction.tudigong.north": "正北",
+  "direction.tudigong.northeast": "东北",
+  "direction.tudigong.east": "正东",
+  "direction.tudigong.southeast": "东南",
+  "direction.tudigong.south": "正南",
+  "direction.tudigong.southwest": "西南",
+  "direction.tudigong.west": "正西",
+  "direction.tudigong.northwest": "西北"
 }

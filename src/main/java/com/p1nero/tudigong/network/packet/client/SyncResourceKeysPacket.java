@@ -35,12 +35,20 @@ public record SyncResourceKeysPacket(List<ResourceLocation> resourceLocations, b
     public void execute(@Nullable Player playerEntity) {
         if(Minecraft.getInstance().level != null) {
             if(isStructure) {
+                StructureSearchScreen.STRUCTURE_NAME_MAP.clear();
+                StructureSearchScreen.STRUCTURE_MOD_IDS.clear();
                 resourceLocations.forEach((resourceLocation -> {
                     StructureSearchScreen.STRUCTURE_NAME_MAP.put(resourceLocation, WorldUtil.getStructureName(resourceLocation));
+                    String modId = resourceLocation.getNamespace().toLowerCase();
+                    StructureSearchScreen.STRUCTURE_MOD_IDS.computeIfAbsent(modId, k -> new java.util.HashSet<>()).add(resourceLocation);
                 }));
             } else {
+                BiomeSearchScreen.BIOME_NAME_MAP.clear();
+                BiomeSearchScreen.BIOME_MOD_IDS.clear();
                 resourceLocations.forEach((resourceLocation -> {
-                    BiomeSearchScreen.BIOMIE_NAME_MAP.put(resourceLocation, WorldUtil.getBiomeName(resourceLocation));
+                    BiomeSearchScreen.BIOME_NAME_MAP.put(resourceLocation, WorldUtil.getBiomeName(resourceLocation));
+                    String modId = resourceLocation.getNamespace().toLowerCase();
+                    BiomeSearchScreen.BIOME_MOD_IDS.computeIfAbsent(modId, k -> new java.util.HashSet<>()).add(resourceLocation);
                 }));
             }
         }

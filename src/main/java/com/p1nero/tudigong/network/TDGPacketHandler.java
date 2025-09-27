@@ -5,6 +5,7 @@ import com.p1nero.tudigong.TuDiGongMod;
 import com.p1nero.tudigong.network.packet.client.AddJourneyMapWaypointPacket;
 import com.p1nero.tudigong.network.packet.client.AddXaeroMapWaypointPacket;
 import com.p1nero.tudigong.network.packet.client.SyncResourceKeysPacket;
+import com.p1nero.tudigong.network.packet.client.SyncStructureTagsPacket;
 import com.p1nero.tudigong.network.packet.server.HandleSearchPacket;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
@@ -26,6 +27,7 @@ public class TDGPacketHandler {
         register(AddXaeroMapWaypointPacket.class, AddXaeroMapWaypointPacket::decode);
         register(AddJourneyMapWaypointPacket.class, AddJourneyMapWaypointPacket::decode);
         register(SyncResourceKeysPacket.class, SyncResourceKeysPacket::decode);
+        register(SyncStructureTagsPacket.class, SyncStructureTagsPacket::decode);
 
         register(HandleSearchPacket.class, HandleSearchPacket::decode);
     }

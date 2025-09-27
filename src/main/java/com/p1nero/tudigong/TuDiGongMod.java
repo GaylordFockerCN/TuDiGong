@@ -27,6 +27,8 @@ import net.minecraft.server.packs.PathPackResources;
 import net.minecraft.server.packs.repository.Pack;
 import net.minecraft.server.packs.repository.PackSource;
 import net.minecraft.tags.BlockTags;
+import com.p1nero.tudigong.network.packet.client.SyncStructureTagsPacket;
+import com.p1nero.tudigong.util.StructureTagManager;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.MobSpawnType;
@@ -80,6 +82,7 @@ public class TuDiGongMod {
 
     private void commonSetup(final FMLCommonSetupEvent event) {
         TDGPacketHandler.register();
+        event.enqueueWork(StructureTagManager::load);
     }
 
     private void onServerChat(ServerChatEvent event) {
@@ -108,6 +111,7 @@ public class TuDiGongMod {
         if(event.getEntity() instanceof ServerPlayer serverPlayer) {
             syncRegistry(serverPlayer, Registries.STRUCTURE);
             syncRegistry(serverPlayer, Registries.BIOME);
+            DialoguePacketRelay.sendToPlayer(TDGPacketHandler.INSTANCE, new SyncStructureTagsPacket(StructureTagManager.getTags()), serverPlayer);
         }
     }
 
