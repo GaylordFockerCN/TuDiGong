@@ -188,7 +188,7 @@ public class TudiGongEntity extends PathfinderMob implements IEntityNpc {
             }
             countRemove();
 
-            if(canInteract() && tickCount > maxLifeTime) {
+            if(canInteract() && tickCount > TDGConfig.TUDIGONG_LIFETIME_TICKS.get()) {
                 this.setRemoved();
             }
 
@@ -242,8 +242,6 @@ public class TudiGongEntity extends PathfinderMob implements IEntityNpc {
     @Override
     protected @NotNull InteractionResult mobInteract(@NotNull Player player, @NotNull InteractionHand hand) {
         if (canInteract() && player instanceof ServerPlayer serverPlayer) {
-            TuDiGongMod.syncRegistry(serverPlayer, Registries.STRUCTURE);
-            TuDiGongMod.syncRegistry(serverPlayer, Registries.BIOME);
             sendDialogTo(serverPlayer);
         }
         return InteractionResult.CONSUME;
@@ -278,6 +276,14 @@ public class TudiGongEntity extends PathfinderMob implements IEntityNpc {
             serverPlayer.displayClientMessage(ComponentUtils.wrapInSquareBrackets(this.getDisplayName()).append(": ").append(Component.translatable("entity.tudigong.tudigong.answer5")), false);
             return;
         }
+
+        // Display Title
+        int distance = (int) Math.sqrt(serverPlayer.blockPosition().distSqr(blockpos));
+        Component direction = WorldUtil.getCardinalDirection(serverPlayer, blockpos);
+        String structureName = WorldUtil.tryToGetName(resourceLocation);
+        Component message = Component.translatable("message.tudigong.location_found", direction, distance, structureName);
+        serverPlayer.sendSystemMessage(message);
+
         String s = blockpos.getY() == -1145 ? "~" : String.valueOf(blockpos.getY());
         s = " " + s + " ";
         if(blockpos.getY() == -1145) {
@@ -293,7 +299,8 @@ public class TudiGongEntity extends PathfinderMob implements IEntityNpc {
         }
 
         if (TDGConfig.SPAWN_GUIDER.get()) {
-            XianQiEntity xianQiEntity = new XianQiEntity(level(), blockpos.getCenter(), serverPlayer);
+            net.minecraft.world.level.levelgen.structure.BoundingBox boundingBox = new net.minecraft.world.level.levelgen.structure.BoundingBox(blockpos).inflatedBy(16);
+            XianQiEntity xianQiEntity = new XianQiEntity(level(), blockpos.getCenter(), serverPlayer, boundingBox);
             level().addFreshEntity(xianQiEntity);
         }
 

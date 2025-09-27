@@ -1,7 +1,7 @@
 package com.p1nero.tudigong.util;
 
+import com.p1nero.tudigong.TDGConfig;
 import com.p1nero.tudigong.client.screen.StructureSearchScreen;
-import dev.worldgen.lithostitched.config.ConfigHandler;
 import net.minecraft.Util;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.commands.CommandSourceStack;
@@ -13,7 +13,9 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.BaseCommandBlock;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.levelgen.structure.Structure;
@@ -35,6 +37,23 @@ public class WorldUtil {
             Pattern.compile(".*?\\[\\s*(-?\\d+)\\s*,\\s*~\\s*,\\s*(-?\\d+)\\s*\\].*");
     private static final Pattern LOCATE_BIOME_PATTERN =
             Pattern.compile(".*?\\[\\s*(-?\\d+)\\s*,\\s*(-?\\d+)\\s*,\\s*(-?\\d+)\\s*\\].*");
+
+    public static Component getCardinalDirection(Player player, BlockPos target) {
+        Vec3 p = player.position();
+        Vec3 t = Vec3.atCenterOf(target);
+        double angle = Mth.atan2(t.z() - p.z(), t.x() - p.x()) * (180 / Math.PI);
+        angle = (angle + 360) % 360; // Normalize to 0-360
+
+        if (angle >= 337.5 || angle < 22.5) return Component.translatable("direction.tudigong.east");
+        if (angle >= 22.5 && angle < 67.5) return Component.translatable("direction.tudigong.southeast");
+        if (angle >= 67.5 && angle < 112.5) return Component.translatable("direction.tudigong.south");
+        if (angle >= 112.5 && angle < 157.5) return Component.translatable("direction.tudigong.southwest");
+        if (angle >= 157.5 && angle < 202.5) return Component.translatable("direction.tudigong.west");
+        if (angle >= 202.5 && angle < 247.5) return Component.translatable("direction.tudigong.northwest");
+        if (angle >= 247.5 && angle < 292.5) return Component.translatable("direction.tudigong.north");
+        if (angle >= 292.5 && angle < 337.5) return Component.translatable("direction.tudigong.northeast");
+        return Component.literal(""); // Should not happen
+    }
 
     public static boolean isInStructure(LivingEntity entity, String structure) {
         if (entity.level().isClientSide) {

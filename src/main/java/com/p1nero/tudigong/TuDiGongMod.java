@@ -38,6 +38,8 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.AddPackFindersEvent;
+import com.p1nero.tudigong.command.ExportStructuresCommand;
+import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.ServerChatEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.level.BlockEvent;
@@ -71,6 +73,7 @@ public class TuDiGongMod {
         MinecraftForge.EVENT_BUS.addListener(this::onPlayerJoinLevel);
         MinecraftForge.EVENT_BUS.addListener(this::onServerChat);
         MinecraftForge.EVENT_BUS.addListener(this::onBlockChange);
+        MinecraftForge.EVENT_BUS.addListener(this::onRegisterCommands);
         modEventBus.addListener(this::onDatapackLoad);
         context.registerConfig(ModConfig.Type.COMMON, TDGConfig.SPEC);
     }
@@ -143,6 +146,10 @@ public class TuDiGongMod {
         if (event.getPackType() == PackType.SERVER_DATA && TDGConfig.GENERATE_TEMPLE.get()) {
             addNewDatapack(event, "tu_di_temple");
         }
+    }
+
+    private void onRegisterCommands(RegisterCommandsEvent event) {
+        ExportStructuresCommand.register(event.getDispatcher());
     }
 
     private void addNewDatapack(AddPackFindersEvent event, String name) {

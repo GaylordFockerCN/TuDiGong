@@ -25,8 +25,6 @@ public class TuDiTempleBlockEntity extends BlockEntity {
     private int resetTimer;
     private int cooldown;
     private boolean release = true;
-    private final int maxResetTimer = 60;
-    private final int maxCooldown = 40;
     private TudiGongEntity tudiGongEntity;
     public TuDiTempleBlockEntity(BlockPos blockPos, BlockState blockState) {
         super(TDGBlockEntities.TUDI_TEMPLE_ENTITY.get(), blockPos, blockState);
@@ -35,7 +33,7 @@ public class TuDiTempleBlockEntity extends BlockEntity {
     public void reset() {
         shiftCount = 0;
         resetTimer = 0;
-        cooldown = maxCooldown;
+        cooldown = TDGConfig.TEMPLE_SUMMON_COOLDOWN_TICKS.get();
         release = true;
         tudiGongEntity = null;
     }
@@ -57,12 +55,12 @@ public class TuDiTempleBlockEntity extends BlockEntity {
                     if(serverPlayer.isShiftKeyDown()) {
                         if(release) {
                             shiftCount++;
-                            resetTimer = maxResetTimer;
+                            resetTimer = TDGConfig.TEMPLE_SUMMON_RESET_TICKS.get();
                             release = false;
                         }
                     } else {
                         release = true;
-                        if(shiftCount == 3) {
+                        if(shiftCount >= TDGConfig.TEMPLE_SUMMON_SHIFT_COUNT.get()) {
                             tudiGongEntity = TDGEntities.TU_DI_GONG.get().spawn(serverPlayer.serverLevel(), pPos.above(1), MobSpawnType.MOB_SUMMONED);
                             if(tudiGongEntity != null) {
                                 tudiGongEntity.setHomePos(pPos);
