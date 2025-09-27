@@ -31,18 +31,21 @@ public class JECharactersIntegration {
         initialized = true;
     }
 
-    public static <T> boolean matches(T ingredient, IIngredientHelper<T> ingredientHelper, String query) {
+    public static boolean match(String text, String query) {
         initialize();
-        String name = ingredientHelper.getDisplayName(ingredient);
         if (jecharactersLoaded && matchesMethod != null) {
             try {
-                return (boolean) matchesMethod.invoke(null, name, query);
+                return (boolean) matchesMethod.invoke(null, text, query);
             } catch (Exception e) {
-                // If reflection fails, fall back to simple contains check
-                return name.toLowerCase().contains(query.toLowerCase());
+                return text.toLowerCase().contains(query.toLowerCase());
             }
         }
-        return name.toLowerCase().contains(query.toLowerCase());
+        return text.toLowerCase().contains(query.toLowerCase());
+    }
+
+    public static <T> boolean matches(T ingredient, IIngredientHelper<T> ingredientHelper, String query) {
+        String name = ingredientHelper.getDisplayName(ingredient);
+        return match(name, query);
     }
 
     public static boolean isLoaded() {

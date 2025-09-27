@@ -60,13 +60,30 @@ public class ResourceList extends ObjectSelectionList<ResourceList.Entry> {
     public void refresh(String keyword) {
         this.setScrollAmount(0.0D);
         this.children().clear();
-        Stream<String> stringStream = names.stream().filter((id) -> StringUtil.isNullOrEmpty(keyword) || id.contains(keyword));
-        if(stringStream.findAny().isEmpty()) {
-            ids.stream().filter((id) -> StringUtil.isNullOrEmpty(keyword) || id.toString().contains(keyword)).map((resourceLocation -> new Entry(map.get(resourceLocation))))
-                    .sorted(Comparator.comparing(entry$ -> entry$.value)).forEach(this::addEntry);
+
+        if (StringUtil.isNullOrEmpty(keyword)) {
+            this.names.stream().sorted().map(Entry::new).forEach(this::addEntry);
+            return;
+        }
+
+        // First, try to match by display name (which can be Chinese)
+        java.util.List<Entry> nameMatches = this.names.stream()
+                .filter(name -> com.p1nero.tudigong.compat.JECharactersIntegration.match(name, keyword))
+                .sorted()
+                .map(Entry::new)
+                .toList();
+
+        if (!nameMatches.isEmpty()) {
+            nameMatches.forEach(this::addEntry);
         } else {
-            names.stream().filter((id) -> StringUtil.isNullOrEmpty(keyword) || id.contains(keyword)).map(Entry::new)
-                    .sorted(Comparator.comparing(entry$ -> entry$.value)).forEach(this::addEntry);
+            // If no name matches, try to match by resource location
+            this.ids.stream()
+                    .filter(id -> com.p1nero.tudigong.compat.JECharactersIntegration.match(id.toString(), keyword))
+                    .map(this.map::get) // Convert ResourceLocation back to display name
+                    .filter(java.util.Objects::nonNull)
+                    .sorted()
+                    .map(Entry::new)
+                    .forEach(this::addEntry);
         }
     }
 
