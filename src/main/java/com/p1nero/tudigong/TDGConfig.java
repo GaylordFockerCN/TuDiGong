@@ -2,6 +2,9 @@ package com.p1nero.tudigong;
 
 import net.minecraftforge.common.ForgeConfigSpec;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class TDGConfig {
     private static final ForgeConfigSpec.Builder BUILDER = new ForgeConfigSpec.Builder();
 
@@ -22,6 +25,7 @@ public class TDGConfig {
     public static final ForgeConfigSpec.IntValue BIOME_SEARCH_RADIUS_BLOCKS = BUILDER.comment("The search radius in blocks for biomes.").defineInRange("biome_search_radius_blocks", 6400, 100, 20000);
     public static final ForgeConfigSpec.IntValue HIGHLIGHT_DISTANCE_BLOCKS = BUILDER.comment("Distance in blocks from the destination to trigger the glowing highlight effect.").defineInRange("highlight_distance_blocks", 144, 16, 512);
     public static final ForgeConfigSpec.IntValue HIGHLIGHT_DURATION_TICKS = BUILDER.comment("Duration in ticks for the glowing highlight effect (20 ticks = 1 second).").defineInRange("highlight_duration_ticks", 600, 100, 72000);
+    public static final ForgeConfigSpec.ConfigValue<List<? extends String>> STRUCTURE_BLACKLIST = BUILDER.comment("A list of structure resource locations that TuDiGong will not be able to find.").defineList("structure_blacklist", new ArrayList<>(), o -> o instanceof String);
     static { BUILDER.pop(); }
 
     static { BUILDER.push("Entity Behavior"); }

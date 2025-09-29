@@ -31,6 +31,7 @@ public class StructureSearchScreen extends Screen {
     public static final BiMap<ResourceLocation, String> STRUCTURE_NAME_MAP = HashBiMap.create();
     public static final Map<String, Set<ResourceLocation>> STRUCTURE_TAGS = new HashMap<>();
     public static final Map<String, Set<ResourceLocation>> STRUCTURE_MOD_IDS = new HashMap<>();
+    public static final Map<String, Set<ResourceLocation>> STRUCTURE_SETS = new HashMap<>();
 
     public StructureSearchScreen(int tudigongId) {
         super(Component.literal(""));
@@ -98,9 +99,14 @@ public class StructureSearchScreen extends Screen {
 
     @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-        if (keyCode == GLFW.GLFW_KEY_ENTER) {
-            this.onSearchButtonPressed(this.searchButton);
-            return true;
+        if (this.searchBox.isFocused()) {
+            if (keyCode == GLFW.GLFW_KEY_TAB) {
+                this.resourceList.handleTabCompletion();
+                return true;
+            } else if (keyCode == GLFW.GLFW_KEY_ENTER) {
+                this.onSearchButtonPressed(this.searchButton);
+                return true;
+            }
         }
         return super.keyPressed(keyCode, scanCode, modifiers);
     }

@@ -10,6 +10,7 @@ import com.p1nero.tudigong.item.TDGItemTabs;
 import com.p1nero.tudigong.item.TDGItems;
 import com.p1nero.tudigong.network.TDGPacketHandler;
 import com.p1nero.tudigong.network.packet.client.SyncResourceKeysPacket;
+import com.p1nero.tudigong.network.packet.client.SyncStructureSetMapPacket;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementProgress;
 import net.minecraft.core.BlockPos;
@@ -29,6 +30,7 @@ import net.minecraft.server.packs.repository.PackSource;
 import net.minecraft.tags.BlockTags;
 import com.p1nero.tudigong.network.packet.client.SyncStructureTagsPacket;
 import com.p1nero.tudigong.util.StructureTagManager;
+import com.p1nero.tudigong.util.StructureUtil;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.MobSpawnType;
@@ -45,6 +47,8 @@ import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.ServerChatEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.level.BlockEvent;
+import net.minecraftforge.event.server.ServerStartingEvent;
+import net.minecraftforge.event.server.ServerStoppingEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod;
@@ -54,8 +58,12 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.slf4j.Logger;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Mod(TuDiGongMod.MOD_ID)
 public class TuDiGongMod {
@@ -76,6 +84,8 @@ public class TuDiGongMod {
         MinecraftForge.EVENT_BUS.addListener(this::onServerChat);
         MinecraftForge.EVENT_BUS.addListener(this::onBlockChange);
         MinecraftForge.EVENT_BUS.addListener(this::onRegisterCommands);
+        MinecraftForge.EVENT_BUS.addListener(this::onServerStarting);
+        MinecraftForge.EVENT_BUS.addListener(this::onServerStopping);
         modEventBus.addListener(this::onDatapackLoad);
         context.registerConfig(ModConfig.Type.COMMON, TDGConfig.SPEC);
     }
@@ -112,6 +122,13 @@ public class TuDiGongMod {
             syncRegistry(serverPlayer, Registries.STRUCTURE);
             syncRegistry(serverPlayer, Registries.BIOME);
             DialoguePacketRelay.sendToPlayer(TDGPacketHandler.INSTANCE, new SyncStructureTagsPacket(StructureTagManager.getTags()), serverPlayer);
+
+            Map<String, Set<ResourceLocation>> serializableMap = new HashMap<>();
+            StructureUtil.getSetToStructuresMap().forEach((setKey, structureKeys) -> {
+                Set<ResourceLocation> locs = structureKeys.stream().map(ResourceKey::location).collect(Collectors.toSet());
+                serializableMap.put(setKey.location().toString(), locs);
+            });
+            DialoguePacketRelay.sendToPlayer(TDGPacketHandler.INSTANCE, new SyncStructureSetMapPacket(serializableMap), serverPlayer);
         }
     }
 
@@ -179,6 +196,14 @@ public class TuDiGongMod {
             return;
         }
         finishAdvancement(advancement, serverPlayer);
+    }
+
+    private void onServerStarting(ServerStartingEvent event) {
+        StructureUtil.buildStructureSetMaps(event.getServer());
+    }
+
+    private void onServerStopping(ServerStoppingEvent event) {
+        StructureUtil.clearStructureSetMaps();
     }
 
 }

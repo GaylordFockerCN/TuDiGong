@@ -3,7 +3,7 @@ package com.p1nero.tudigong.compat;
 import com.p1nero.dialog_lib.network.DialoguePacketRelay;
 import com.p1nero.tudigong.network.TDGPacketHandler;
 import com.p1nero.tudigong.network.packet.client.AddXaeroMapWaypointPacket;
-import com.p1nero.tudigong.util.WorldUtil;
+import com.p1nero.tudigong.util.TextUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
@@ -42,7 +42,7 @@ public class XaeroWaypointHelper {
 
     @OnlyIn(Dist.CLIENT)
     public static void addWayPoint(BlockPos pos, String name, @Nullable WaypointColor color){
-        name = WorldUtil.tryToGetName(name);
+        name = TextUtil.tryToGetName(name);
         if (Minecraft.getInstance().player != null && Minecraft.getInstance().level != null) {
             ArrayList<Waypoint> waypoints = getWaypoints(Minecraft.getInstance().player);
             String finalName = name;

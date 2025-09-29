@@ -5,7 +5,7 @@ import com.p1nero.tudigong.TuDiGongMod;
 import com.p1nero.tudigong.network.TDGPacketHandler;
 import com.p1nero.tudigong.network.packet.client.AddJourneyMapWaypointPacket;
 import com.p1nero.tudigong.network.packet.client.AddXaeroMapWaypointPacket;
-import com.p1nero.tudigong.util.WorldUtil;
+import com.p1nero.tudigong.util.TextUtil;
 import journeymap.client.api.IClientAPI;
 import journeymap.client.api.IClientPlugin;
 import journeymap.client.api.display.Waypoint;
@@ -54,7 +54,7 @@ public class JourneyMapWaypointHelper implements IClientPlugin {
     public static void createNewWaypoint(String name, int color, BlockPos pos, ResourceKey<Level> dimension) {
         Waypoint bedWaypoint;
         try {
-            bedWaypoint = new Waypoint(TuDiGongMod.MOD_ID, name.toLowerCase(Locale.ROOT) + "_" + dimension, WorldUtil.tryToGetName(name), dimension, pos)
+            bedWaypoint = new Waypoint(TuDiGongMod.MOD_ID, name.toLowerCase(Locale.ROOT) + "_" + dimension, TextUtil.tryToGetName(name), dimension, pos)
                     .setColor(color);
 
             jmAPI.show(bedWaypoint);

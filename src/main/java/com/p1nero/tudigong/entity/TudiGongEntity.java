@@ -10,7 +10,9 @@ import com.p1nero.tudigong.client.screen.BiomeSearchScreen;
 import com.p1nero.tudigong.client.screen.StructureSearchScreen;
 import com.p1nero.tudigong.compat.JourneyMapCompat;
 import com.p1nero.tudigong.compat.XaeroMapCompat;
-import com.p1nero.tudigong.util.WorldUtil;
+import com.p1nero.tudigong.util.BiomeUtil;
+import com.p1nero.tudigong.util.StructureUtil;
+import com.p1nero.tudigong.util.TextUtil;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
@@ -46,10 +48,13 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class TudiGongEntity extends PathfinderMob implements IEntityNpc {
+    private static final Logger LOGGER = LogManager.getLogger();
     private Player conservingPlayer;
     private boolean markRemoved;
     private static final EntityDataAccessor<Integer> REMOVE_TIMER = SynchedEntityData.defineId(TudiGongEntity.class, EntityDataSerializers.INT);
@@ -274,17 +279,23 @@ public class TudiGongEntity extends PathfinderMob implements IEntityNpc {
     }
 
     public void handleSearch(ServerPlayer serverPlayer, ResourceLocation resourceLocation, boolean isStructure) {
+        LOGGER.info("Player {} located {} (isStructure: {})".toString(), serverPlayer.getName().getString(), resourceLocation.toString(), isStructure);
         this.setConversingPlayer(null);
-        BlockPos blockpos = isStructure ? WorldUtil.getNearbyStructurePos(serverPlayer, resourceLocation.toString(), -1145) : WorldUtil.getNearbyBiomePos(serverPlayer, resourceLocation.toString());
+        if (isStructure && TDGConfig.STRUCTURE_BLACKLIST.get().contains(resourceLocation.toString())) {
+            serverPlayer.displayClientMessage(ComponentUtils.wrapInSquareBrackets(this.getDisplayName()).append(": ").append(Component.translatable("entity.tudigong.tudigong.answer5")), false);
+            return;
+        }
+        BlockPos blockpos = isStructure ? StructureUtil.getNearbyStructurePos(serverPlayer, resourceLocation.toString(), -1145) : BiomeUtil.getNearbyBiomePos(serverPlayer, resourceLocation.toString());
         if(blockpos == null) {
+            LOGGER.warn("Could not find location for {}, possibly blocked by other mods.", resourceLocation.toString());
             serverPlayer.displayClientMessage(ComponentUtils.wrapInSquareBrackets(this.getDisplayName()).append(": ").append(Component.translatable("entity.tudigong.tudigong.answer5")), false);
             return;
         }
 
         // Display Title
         int distance = (int) Math.sqrt(serverPlayer.blockPosition().distSqr(blockpos));
-        Component direction = WorldUtil.getCardinalDirection(serverPlayer, blockpos);
-        String structureName = WorldUtil.tryToGetName(resourceLocation);
+        Component direction = TextUtil.getCardinalDirection(serverPlayer, blockpos);
+        String structureName = TextUtil.tryToGetName(resourceLocation);
         Component message = Component.translatable("message.tudigong.location_found", direction, distance, structureName);
         serverPlayer.sendSystemMessage(message);
 

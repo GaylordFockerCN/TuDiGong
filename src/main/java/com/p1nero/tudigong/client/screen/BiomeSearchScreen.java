@@ -97,9 +97,14 @@ public class BiomeSearchScreen extends Screen {
 
     @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-        if (keyCode == GLFW.GLFW_KEY_ENTER) {
-            this.onSearchButtonPressed(this.searchButton);
-            return true;
+        if (this.searchBox.isFocused()) {
+            if (keyCode == GLFW.GLFW_KEY_TAB) {
+                this.resourceList.handleTabCompletion();
+                return true;
+            } else if (keyCode == GLFW.GLFW_KEY_ENTER) {
+                this.onSearchButtonPressed(this.searchButton);
+                return true;
+            }
         }
         return super.keyPressed(keyCode, scanCode, modifiers);
     }
