@@ -3,13 +3,15 @@ package com.p1nero.tudigong.entity;
 import com.p1nero.dialog_lib.api.IEntityNpc;
 import com.p1nero.dialog_lib.api.goal.LookAtConservingPlayerGoal;
 import com.p1nero.dialog_lib.client.screen.DialogueScreenBuilder;
+import com.p1nero.dialog_lib.network.DialoguePacketRelay;
 import com.p1nero.tudigong.TDGConfig;
-import com.p1nero.tudigong.TuDiGongMod;
 import com.p1nero.tudigong.block.custom.TuDiTempleBlockEntity;
 import com.p1nero.tudigong.client.screen.BiomeSearchScreen;
 import com.p1nero.tudigong.client.screen.StructureSearchScreen;
 import com.p1nero.tudigong.compat.JourneyMapCompat;
 import com.p1nero.tudigong.compat.XaeroMapCompat;
+import com.p1nero.tudigong.network.TDGPacketHandler;
+import com.p1nero.tudigong.network.packet.client.SyncHistoryEntryPacket;
 import com.p1nero.tudigong.util.BiomeUtil;
 import com.p1nero.tudigong.util.StructureUtil;
 import com.p1nero.tudigong.util.TextUtil;
@@ -18,7 +20,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
@@ -278,8 +279,8 @@ public class TudiGongEntity extends PathfinderMob implements IEntityNpc {
         }
     }
 
-    public void handleSearch(ServerPlayer serverPlayer, ResourceLocation resourceLocation, boolean isStructure) {
-        LOGGER.info("Player {} located {} (isStructure: {})".toString(), serverPlayer.getName().getString(), resourceLocation.toString(), isStructure);
+    public void handleSearch(ServerPlayer serverPlayer, String originalSearchTerm, ResourceLocation resourceLocation, boolean isStructure) {
+        LOGGER.info("Player {} located {} (isStructure: {}) using term '{}'", serverPlayer.getName().getString(), resourceLocation.toString(), isStructure, originalSearchTerm);
         this.setConversingPlayer(null);
         if (isStructure && TDGConfig.STRUCTURE_BLACKLIST.get().contains(resourceLocation.toString())) {
             serverPlayer.displayClientMessage(ComponentUtils.wrapInSquareBrackets(this.getDisplayName()).append(": ").append(Component.translatable("entity.tudigong.tudigong.answer5")), false);
@@ -291,6 +292,12 @@ public class TudiGongEntity extends PathfinderMob implements IEntityNpc {
             serverPlayer.displayClientMessage(ComponentUtils.wrapInSquareBrackets(this.getDisplayName()).append(": ").append(Component.translatable("entity.tudigong.tudigong.answer5")), false);
             return;
         }
+
+        // Send successful search result back to client for history
+        Component typeComponent = Component.translatable(isStructure ? "history.tudigong.type.structure" : "history.tudigong.type.biome");
+        BlockPos historyPos = blockpos.getY() == -1145 ? null : blockpos;
+        SyncHistoryEntryPacket historyPacket = new SyncHistoryEntryPacket(originalSearchTerm, typeComponent, historyPos);
+        DialoguePacketRelay.sendToPlayer(TDGPacketHandler.INSTANCE, historyPacket, serverPlayer);
 
         // Display Title
         int distance = (int) Math.sqrt(serverPlayer.blockPosition().distSqr(blockpos));

@@ -16,7 +16,7 @@
   "entity.tudigong.xian_qi.tip": "已抵达目的地附近，本次导航结束。",
   "advancement.sincerity.sincerity2.desc": "向土地庙祈福",
   "advancement.sincerity.sincerity.desc": "召唤土地公",
-  "tip.tudigong.summon": "雷霆律令，召役土地。里域正神，聞呪速臨，急急如律令！",
+  "tip.tudigong.summon": "雷霆律令，召役土地。里域正神，闻呪速临，急急如律令！",
   "item.tudigong.tudi_command_spell": "土地公令咒",
   "item.tudigong.tudi_command_spell.usage": "右击泥土以召唤土地公",
 
@@ -65,5 +65,27 @@
   "direction.tudigong.south": "正南",
   "direction.tudigong.southwest": "西南",
   "direction.tudigong.west": "正西",
-  "direction.tudigong.northwest": "西北"
+  "direction.tudigong.northwest": "西北",
+
+  "command.tudigong.help.header": "--- 土地公模组命令 ---",
+  "command.tudigong.help.export": "/tudigong export_structures [lang] - 导出结构数据及翻译.",
+  "command.tudigong.help.reload": "/tudigong reload_tags - 重新加载结构标签文件.",
+  "command.tudigong.help.tag_create": "/tudigong tag create <tagName> - 创建新标签.",
+  "command.tudigong.help.tag_add": "/tudigong tag add <tagName> <structure> - 将结构添加到标签.",
+  "command.tudigong.help.tag_remove": "/tudigong tag remove <tagName> <structure> - 从标签中移除结构.",
+  "command.tudigong.help.tag_list": "/tudigong tag list <tagName> - 列出标签中的结构.",
+  "command.tudigong.help.tag_list_all": "/tudigong tag list_all - 列出所有已定义标签.",
+
+  "error.tudigong.tag_not_found": "未找到或空的标签: %s",
+  "error.tudigong.invalid_resource_location": "无效的资源路径: %s",
+  "gui.tudigong.search.placeholder": "按名称、#标签或@模组ID搜索...",
+  "gui.tudigong.history.found_at": "发现于: ",
+  "gui.tudigong.history.pos_na": "无坐标信息",
+  "gui.tudigong.history.teleport": "传送",
+  "history.tudigong.type.structure": "[结构]",
+  "history.tudigong.type.biome": "[群系]",
+  "gui.tudigong.history.title": "搜索历史",
+  "gui.tudigong.history.button": "历史",
+  "gui.tudigong.history.clear": "清空历史",
+  "gui.tudigong.history.search_placeholder": "筛选历史记录..."
 }

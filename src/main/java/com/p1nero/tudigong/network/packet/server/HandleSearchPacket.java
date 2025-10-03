@@ -3,6 +3,8 @@ package com.p1nero.tudigong.network.packet.server;
 import com.p1nero.dialog_lib.network.packet.BasePacket;
 import com.p1nero.tudigong.entity.TudiGongEntity;
 import com.p1nero.tudigong.util.StructureTagManager;
+import com.p1nero.tudigong.util.StructureUtil;
+import net.minecraft.ResourceLocationException;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -15,6 +17,8 @@ import java.util.Optional;
 
 public record HandleSearchPacket(int entityID, String searchString, boolean isStructure) implements BasePacket {
 
+    private static final String TAG_PREFIX = "#";
+
     public void encode(FriendlyByteBuf buf) {
         buf.writeInt(this.entityID());
         buf.writeUtf(this.searchString());
@@ -25,27 +29,58 @@ public record HandleSearchPacket(int entityID, String searchString, boolean isSt
         return new HandleSearchPacket(buf.readInt(), buf.readUtf(), buf.readBoolean());
     }
 
+    @Override
     public void execute(@Nullable Player player) {
-        if (player instanceof ServerPlayer serverPlayer) {
-            Entity entity = player.level().getEntity(this.entityID());
-            if (entity instanceof TudiGongEntity tudiGongEntity) {
-                if (isStructure && searchString.startsWith("#")) {
-                    String tagName = searchString.substring(1);
-                    Optional<ResourceLocation> structureOpt = StructureTagManager.getRandomStructureForTag(tagName);
-                    if (structureOpt.isPresent()) {
-                        tudiGongEntity.handleSearch(serverPlayer, structureOpt.get(), true);
-                    } else {
-                        player.sendSystemMessage(Component.literal("Tag not found or is empty: " + tagName));
-                    }
-                } else {
-                    try {
-                        @SuppressWarnings("removal") ResourceLocation resourceLocation = new ResourceLocation(searchString);
-                        tudiGongEntity.handleSearch(serverPlayer, resourceLocation, isStructure);
-                    } catch (Exception e) {
-                        player.sendSystemMessage(Component.literal("Invalid resource location: " + searchString));
-                    }
-                }
-            }
+        if (!(player instanceof ServerPlayer serverPlayer)) {
+            return;
+        }
+
+        Entity entity = serverPlayer.level().getEntity(this.entityID());
+        if (!(entity instanceof TudiGongEntity tudiGongEntity)) {
+            return;
+        }
+
+        // Pass the original search term to the handler
+        resolveResourceLocation(serverPlayer).ifPresent(resourceLocation ->
+                tudiGongEntity.handleSearch(serverPlayer, this.searchString, resourceLocation, isStructure)
+        );
+    }
+
+    private Optional<ResourceLocation> resolveResourceLocation(ServerPlayer player) {
+        if (isStructure && searchString.startsWith(TAG_PREFIX)) {
+            return handleTagSearch(player);
+        } else {
+            return handleDirectSearch(player);
+        }
+    }
+
+    private Optional<ResourceLocation> handleTagSearch(ServerPlayer player) {
+        String tagName = searchString.substring(TAG_PREFIX.length());
+        Optional<ResourceLocation> structureOpt = StructureTagManager.getRandomStructureForTag(tagName);
+        if (structureOpt.isEmpty()) {
+            player.sendSystemMessage(Component.translatable("error.tudigong.tag_not_found", tagName));
+        }
+        return structureOpt;
+    }
+
+    private Optional<ResourceLocation> handleDirectSearch(ServerPlayer player) {
+        try {
+            // Try to parse as a direct ResourceLocation first.
+            @SuppressWarnings("removal")
+            ResourceLocation resourceLocation = new ResourceLocation(searchString);
+            return Optional.of(resourceLocation);
+        } catch (ResourceLocationException e) {
+            // If that fails, try our fallback search by structure type name.
+            return StructureUtil.findStructureByTypeName(player.server.registryAccess(), searchString)
+                    .map(key -> {
+                        // If found, convert the key back to a location.
+                        return Optional.of(key.location());
+                    })
+                    .orElseGet(() -> {
+                        // If still not found, then send the error to the player.
+                        player.sendSystemMessage(Component.translatable("error.tudigong.invalid_resource_location", searchString));
+                        return Optional.empty();
+                    });
         }
     }
 }

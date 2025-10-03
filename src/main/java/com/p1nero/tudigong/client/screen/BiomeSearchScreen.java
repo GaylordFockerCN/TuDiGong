@@ -4,6 +4,7 @@ import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import com.p1nero.dialog_lib.network.DialoguePacketRelay;
 import com.p1nero.dialog_lib.network.packet.serverbound.HandleNpcEntityPlayerInteractPacket;
+import com.p1nero.tudigong.client.screen.HistoryScreen;
 import com.p1nero.tudigong.client.widget.ResourceList;
 import com.p1nero.tudigong.network.TDGPacketHandler;
 import com.p1nero.tudigong.network.packet.server.HandleSearchPacket;
@@ -41,26 +42,33 @@ public class BiomeSearchScreen extends Screen {
         super.init();
 
         int inputBoxWidth = 200;
-        int buttonWidth = 60;
+        int buttonWidth = 80;
         int totalWidth = inputBoxWidth + buttonWidth + 5;
         int leftPos = (this.width - totalWidth) / 2;
         int topPos = 50;
 
-        this.searchBox = new EditBox(this.font, leftPos, topPos, inputBoxWidth, 20, Component.literal("Biome Resource Location"));
+        this.searchBox = new EditBox(this.font, leftPos, topPos + 11, inputBoxWidth, 20, Component.translatable("gui.tudigong.search.placeholder"));
         this.searchBox.setMaxLength(32500);
         this.searchBox.setValue("");
-        this.resourceList = new ResourceList(Minecraft.getInstance(), inputBoxWidth, this.height, topPos + 23, this.height - 50, 21, BIOME_NAME_MAP, searchBox, null, BIOME_MOD_IDS);
-        this.resourceList.setRenderTopAndBottom(false);
-        this.resourceList.setLeftPos(leftPos);
-        this.searchBox.setResponder(this.resourceList::refresh);
-        this.resourceList.refresh(null);
         this.addRenderableWidget(this.searchBox);
-        this.addRenderableWidget(this.resourceList);
+
+        this.addRenderableWidget(Button.builder(Component.translatable("gui.tudigong.history.button"),
+                        button -> this.minecraft.setScreen(new HistoryScreen(this)))
+                .bounds(leftPos + inputBoxWidth + 5, topPos, buttonWidth, 20).build());
 
         this.searchButton = Button.builder(Component.translatable("button.tudigong.ask"), this::onSearchButtonPressed)
-                .bounds(leftPos + inputBoxWidth + 5, topPos, buttonWidth, 20)
+                .bounds(leftPos + inputBoxWidth + 5, topPos + 22, buttonWidth, 20)
                 .build();
         this.addRenderableWidget(this.searchButton);
+
+        int listY = topPos + 44 + 2;
+        this.resourceList = new ResourceList(Minecraft.getInstance(), inputBoxWidth, this.height, listY, this.height - 30, 21, BIOME_NAME_MAP, searchBox, null, BIOME_MOD_IDS);
+        this.resourceList.setRenderTopAndBottom(false);
+        this.resourceList.setLeftPos(leftPos);
+        this.addRenderableWidget(this.resourceList);
+
+        this.searchBox.setResponder(this.resourceList::refresh);
+        this.resourceList.refresh(null);
 
         this.setInitialFocus(this.searchBox);
     }

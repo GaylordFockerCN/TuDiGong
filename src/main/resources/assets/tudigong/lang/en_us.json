@@ -16,7 +16,7 @@
   "entity.tudigong.xian_qi.tip": "You have arrived at your destination. The navigation has ended.",
   "advancement.sincerity.sincerity.desc": "Summon Tu Di Gong.",
   "advancement.sincerity.sincerity2.desc": "Pray for blessings at the Tu Di Temple.",
-  "tip.tudigong.summon": "雷霆律令，召役土地。里域正神，聞呪速臨，急急如律令！",
+  "tip.tudigong.summon": "Thunder's decree, summon the earth god. Righteous spirit of this domain, hearing my call, come forth swiftly, as urgently as the law commands!",
   "item.tudigong.tudi_command_spell": "TuDi Command Spell",
   "item.tudigong.tudi_command_spell.usage": "Right Click Dirtlike Block to summon Tu Di Gong",
 
@@ -74,5 +74,18 @@
   "command.tudigong.help.tag_add": "/tudigong tag add <tagName> <structure> - Adds a structure to a tag.",
   "command.tudigong.help.tag_remove": "/tudigong tag remove <tagName> <structure> - Removes a structure from a tag.",
   "command.tudigong.help.tag_list": "/tudigong tag list <tagName> - Lists structures in a tag.",
-  "command.tudigong.help.tag_list_all": "/tudigong tag list_all - Lists all defined tags."
+  "command.tudigong.help.tag_list_all": "/tudigong tag list_all - Lists all defined tags.",
+
+  "error.tudigong.tag_not_found": "Tag not found or is empty: %s",
+  "error.tudigong.invalid_resource_location": "Invalid resource location: %s",
+  "gui.tudigong.search.placeholder": "Search by name, #tag, or @modid...",
+  "gui.tudigong.history.found_at": "Found at: ",
+  "gui.tudigong.history.pos_na": "Position not applicable",
+  "gui.tudigong.history.teleport": "TP",
+  "history.tudigong.type.structure": "[Structure]",
+  "history.tudigong.type.biome": "[Biome]",
+  "gui.tudigong.history.title": "Search History",
+  "gui.tudigong.history.button": "History",
+  "gui.tudigong.history.clear": "Clear History",
+  "gui.tudigong.history.search_placeholder": "Filter history..."
 }
