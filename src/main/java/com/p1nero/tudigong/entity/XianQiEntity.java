@@ -79,13 +79,15 @@ public class XianQiEntity extends PathfinderMob {
 
     @Override
     public boolean hurt(@NotNull DamageSource source, float value) {
-        this.discard();
-        return true;
+        if(source.getEntity() instanceof Player) {
+            this.discard();
+        }
+        return super.hurt(source, value);
     }
 
     public static AttributeSupplier.Builder createAttributes() {
         return Animal.createLivingAttributes()
-                .add(Attributes.MAX_HEALTH, 20D)
+                .add(Attributes.MAX_HEALTH, 200D)
                 .add(Attributes.FOLLOW_RANGE, 24D)
                 .add(Attributes.MOVEMENT_SPEED, 1.0D)
                 .add(Attributes.ARMOR_TOUGHNESS, 0.1f)

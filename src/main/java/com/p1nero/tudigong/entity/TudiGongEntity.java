@@ -194,13 +194,13 @@ public class TudiGongEntity extends PathfinderMob implements IEntityNpc {
             }
             countRemove();
 
-            if(canInteract() && tickCount > TDGConfig.TUDIGONG_LIFETIME_TICKS.get()) {
-                this.setRemoved();
-            }
-
-            if(this.conservingPlayer != null) {
-                this.tickCount = maxRemoveTime;//刷新计时
-            }
+//            if(canInteract() && tickCount > TDGConfig.TUDIGONG_LIFETIME_TICKS.get()) {
+//                this.setRemoved();
+//            }
+//
+//            if(this.conservingPlayer != null) {
+//                this.tickCount = maxRemoveTime;//刷新计时
+//            }
 
         }
     }
@@ -238,11 +238,6 @@ public class TudiGongEntity extends PathfinderMob implements IEntityNpc {
     @Override
     public boolean isNoGravity() {
         return true;
-    }
-
-    @Override
-    public boolean removeWhenFarAway(double p_21542_) {
-        return false;
     }
 
     @Override
