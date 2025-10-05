@@ -29,7 +29,7 @@ public class HistoryList extends ObjectSelectionList<HistoryList.Entry> {
 
     public HistoryList(Minecraft minecraft, int width, int height, int y0, int y1) {
         super(minecraft, width, height, y0, y1, 40);
-        this.setRenderBackground(false);
+        this.setRenderBackground(true);
     }
 
     public void filter(String keyword) {
@@ -88,7 +88,7 @@ public class HistoryList extends ObjectSelectionList<HistoryList.Entry> {
         @Override
         public void render(GuiGraphics guiGraphics, int index, int top, int left, int width, int height, int mouseX, int mouseY, boolean isMouseOver, float partialTicks) {
             // Render entry background
-            guiGraphics.blit(HISTORY_ENTRY_TEXTURE, left, top, 0, isMouseOver ? height : 0, width, height, width, height * 2);
+//            guiGraphics.blit(HISTORY_ENTRY_TEXTURE, left, top, 0, isMouseOver ? height : 0, width, height, width, height * 2);
 
             // Render Icon
             guiGraphics.renderFakeItem(this.icon, left + 8, top + 12);

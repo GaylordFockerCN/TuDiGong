@@ -57,7 +57,7 @@ import org.jetbrains.annotations.Nullable;
 public class TudiGongEntity extends PathfinderMob implements IEntityNpc {
     private static final Logger LOGGER = LogManager.getLogger();
     private Player conservingPlayer;
-    private boolean markRemoved;
+    private static final EntityDataAccessor<Boolean> IS_REMOVED = SynchedEntityData.defineId(TudiGongEntity.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Integer> REMOVE_TIMER = SynchedEntityData.defineId(TudiGongEntity.class, EntityDataSerializers.INT);
     public final int maxRemoveTime = 60;
     public final int maxLifeTime = 1200;
@@ -80,15 +80,20 @@ public class TudiGongEntity extends PathfinderMob implements IEntityNpc {
     protected void defineSynchedData() {
         super.defineSynchedData();
         this.entityData.define(REMOVE_TIMER, 0);
+        this.entityData.define(IS_REMOVED, false);
     }
 
-    public void setRemoved() {
+    public void setMarkRemoved() {
         this.setRemoveTimer(maxRemoveTime);
-        markRemoved = true;
+        this.getEntityData().set(IS_REMOVED, true);
+    }
+
+    public boolean isMarkRemoved() {
+        return getEntityData().get(IS_REMOVED);
     }
 
     public void countRemove() {
-        if(!markRemoved || level().isClientSide) {
+        if(!isMarkRemoved()) {
             return;
         }
         int timer = this.getRemoveTimer();
@@ -113,7 +118,7 @@ public class TudiGongEntity extends PathfinderMob implements IEntityNpc {
     }
 
     public boolean canInteract() {
-        return this.getRemoveTimer() == 0 && this.tickCount > maxRemoveTime;
+        return !this.isMarkRemoved() && this.tickCount > maxRemoveTime;
     }
 
     public static AttributeSupplier.Builder createAttributes() {
@@ -161,13 +166,7 @@ public class TudiGongEntity extends PathfinderMob implements IEntityNpc {
                 level().addParticle(ParticleTypes.CLOUD, position.x, position.y + 0.5, position.z, 0, 0, 0);
             }
 
-            if(this.getRemoveTimer() == 1){
-                this.discard();//保险？
-            }
         } else {
-            if (tickCount > maxLifeTime && this.getConversingPlayer() == null) {
-                this.setRemoved();
-            }
 
             if(!this.canInteract()) {
                 level().playSound(null, this.getX(), this.getY(), this.getZ(), SoundEvents.ROOTED_DIRT_STEP, SoundSource.BLOCKS, this.random.nextFloat() + 0.5F, this.random.nextFloat() + 0.5F);
@@ -194,19 +193,18 @@ public class TudiGongEntity extends PathfinderMob implements IEntityNpc {
             }
             countRemove();
 
-//            if(canInteract() && tickCount > TDGConfig.TUDIGONG_LIFETIME_TICKS.get()) {
-//                this.setRemoved();
-//            }
-//
-//            if(this.conservingPlayer != null) {
-//                this.tickCount = maxRemoveTime;//刷新计时
-//            }
+            if(canInteract() && tickCount > TDGConfig.TUDIGONG_LIFETIME_TICKS.get()) {
+                this.setMarkRemoved();
+            }
+
+            if(this.conservingPlayer != null) {
+                this.tickCount = maxRemoveTime;//刷新计时
+            }
 
         }
     }
 
     public void noticeHomeAndDiscard() {
-        markRemoved = true;
         if(this.homePos != null) {
             if(level().getBlockEntity(this.homePos) instanceof TuDiTempleBlockEntity tuDiTempleBlockEntity) {
                 tuDiTempleBlockEntity.reset();
@@ -259,7 +257,7 @@ public class TudiGongEntity extends PathfinderMob implements IEntityNpc {
             builder.start(1)
                     .addFinalChoice(1, 2, (dialogueScreen -> Minecraft.getInstance().setScreen(new StructureSearchScreen(this.getId()))))
                     .addFinalChoice(2, 2, (dialogueScreen -> Minecraft.getInstance().setScreen(new BiomeSearchScreen(this.getId()))))
-                    .addFinalChoice(3);
+                    .addFinalChoice(3, 3);
         }
         return builder;
     }
@@ -267,8 +265,9 @@ public class TudiGongEntity extends PathfinderMob implements IEntityNpc {
     @Override
     public void handleNpcInteraction(ServerPlayer serverPlayer, int i) {
         if (i == 3) {
-            this.setRemoved();
+            this.setMarkRemoved();
         }
+        //2表示打开窗口，应保持对话
         if(i != 2) {
             setConversingPlayer(null);
         }
@@ -299,7 +298,7 @@ public class TudiGongEntity extends PathfinderMob implements IEntityNpc {
         Component direction = TextUtil.getCardinalDirection(serverPlayer, blockpos);
         String structureName = TextUtil.tryToGetName(resourceLocation);
         Component message = Component.translatable("message.tudigong.location_found", direction, distance, structureName);
-        serverPlayer.sendSystemMessage(message);
+        serverPlayer.sendSystemMessage(ComponentUtils.wrapInSquareBrackets(this.getDisplayName()).append(": ").append(message));
 
         String s = blockpos.getY() == -1145 ? "~" : String.valueOf(blockpos.getY());
         s = " " + s + " ";
@@ -328,7 +327,7 @@ public class TudiGongEntity extends PathfinderMob implements IEntityNpc {
         dir = target.subtract(from).normalize();
         startTick = this.tickCount;
         level().playSound(null, this.getX(), this.getY(), this.getZ(), SoundEvents.PLAYER_LEVELUP, SoundSource.BLOCKS, 1.0F, 1.0F);
-        setRemoved();
+        setMarkRemoved();
     }
 
     @Override

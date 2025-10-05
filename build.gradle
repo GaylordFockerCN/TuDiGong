@@ -137,6 +137,17 @@ repositories {
     }
 
     maven {
+        // location of the maven that hosts JEI files since January 2023
+        name = "Jared's maven"
+        url = "https://maven.blamejared.com/"
+    }
+
+    maven {
+        name = 'GeckoLib'
+        url 'https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/'
+    }
+
+    maven {
         url "https://cursemaven.com"
         content {
             includeGroup "curse.maven"
@@ -152,7 +163,31 @@ dependencies {
     // If the group id is "net.minecraft" and the artifact id is one of ["client", "server", "joined"],
     // then special handling is done to allow a setup of a vanilla dependency without the use of an external repository.
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
-    compileOnly fg.deobf(files(fileTree(dir: 'libs', includes: ['*.jar'])))
+
+
+    implementation fg.deobf("libs:p1nero_dl:1.6.0")
+    implementation fg.deobf("curse.maven:just-enough-characters-250702:6680042")
+//    implementation fg.deobf("curse.maven:contingameime-835640:5086866")
+    implementation fg.deobf("curse.maven:xaeros-world-map-317780:6212636")//大地图
+    implementation fg.deobf("curse.maven:xaeros-minimap-263420:6306152")//小地图
+    implementation fg.deobf("curse.maven:journeymap-32274:5789363")//旅行地图
+
+    implementation fg.deobf("curse.maven:lithostitched-936015:6742615")//村庄插入
+
+    implementation fg.deobf("libs:trek:B0.5.1")
+    implementation fg.deobf("curse.maven:towns-and-towers-626761:4923828")
+    implementation fg.deobf("curse.maven:cristel-lib-856996:5869180")
+
+
+    implementation fg.deobf("curse.maven:changshengjue-1321085:6871178")
+    implementation fg.deobf("curse.maven:patchouli-306770:6164575")
+    implementation fg.deobf("curse.maven:terrablender-563928:6290448")
+    implementation fg.deobf("software.bernie.geckolib:geckolib-forge-1.20.1:4.7.3")
+
+    implementation fg.deobf("curse.maven:jei-238222:7037120")
+
+    compileOnly(fg.deobf("mezz.jei:jei-${minecraft_version}-forge-api:${jei_version}"))
+    runtimeOnly(fg.deobf("mezz.jei:jei-${minecraft_version}-forge:${jei_version}"))
 
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
 
