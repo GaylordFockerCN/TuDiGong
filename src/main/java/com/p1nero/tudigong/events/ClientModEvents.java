@@ -1,6 +1,7 @@
 package com.p1nero.tudigong.events;
 
 import com.p1nero.tudigong.TuDiGongMod;
+import com.p1nero.tudigong.client.util.SearchHistoryManager;
 import com.p1nero.tudigong.entity.TDGEntities;
 import com.p1nero.tudigong.entity.client.TudiGongModel;
 import com.p1nero.tudigong.entity.client.TudiGongRenderer;
@@ -18,6 +19,7 @@ public class ClientModEvents {
     public static void onClientSetup(FMLClientSetupEvent event) {
         EntityRenderers.register(TDGEntities.TU_DI_GONG.get(), TudiGongRenderer::new);
         EntityRenderers.register(TDGEntities.XIAN_QI.get(), XianQiRenderer::new);
+        event.enqueueWork(SearchHistoryManager::load);
     }
 
     @SubscribeEvent

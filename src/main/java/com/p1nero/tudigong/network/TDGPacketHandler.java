@@ -6,8 +6,11 @@ import com.p1nero.tudigong.network.packet.client.AddJourneyMapWaypointPacket;
 import com.p1nero.tudigong.network.packet.client.AddXaeroMapWaypointPacket;
 import com.p1nero.tudigong.network.packet.client.SyncHistoryEntryPacket;
 import com.p1nero.tudigong.network.packet.client.SyncResourceKeysPacket;
+import com.p1nero.tudigong.network.packet.client.SyncStructureDimensionsPacket;
+import com.p1nero.tudigong.network.packet.client.SyncStructureSetsPacket;
 import com.p1nero.tudigong.network.packet.client.SyncStructureTagsPacket;
 import com.p1nero.tudigong.network.packet.server.HandleSearchPacket;
+import com.p1nero.tudigong.network.packet.server.TeleportToServerPacket;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.network.NetworkRegistry;
@@ -29,9 +32,12 @@ public class TDGPacketHandler {
         register(AddJourneyMapWaypointPacket.class, AddJourneyMapWaypointPacket::decode);
         register(SyncResourceKeysPacket.class, SyncResourceKeysPacket::decode);
         register(SyncStructureTagsPacket.class, SyncStructureTagsPacket::decode);
+        register(SyncStructureSetsPacket.class, SyncStructureSetsPacket::decode);
+        register(SyncStructureDimensionsPacket.class, SyncStructureDimensionsPacket::decode);
         register(SyncHistoryEntryPacket.class, SyncHistoryEntryPacket::decode);
 
         register(HandleSearchPacket.class, HandleSearchPacket::decode);
+        register(TeleportToServerPacket.class, TeleportToServerPacket::decode);
     }
 
     private static <MSG extends BasePacket> void register(final Class<MSG> packet, Function<FriendlyByteBuf, MSG> decoder) {

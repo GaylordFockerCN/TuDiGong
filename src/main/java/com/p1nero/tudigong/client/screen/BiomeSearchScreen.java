@@ -62,7 +62,7 @@ public class BiomeSearchScreen extends Screen {
         this.addRenderableWidget(this.searchButton);
 
         int listY = topPos + 44 + 2;
-        this.resourceList = new ResourceList(Minecraft.getInstance(), inputBoxWidth, this.height, listY, this.height - 30, 21, BIOME_NAME_MAP, searchBox, null, BIOME_MOD_IDS);
+        this.resourceList = new ResourceList(Minecraft.getInstance(), inputBoxWidth, this.height, listY, this.height - 30, 21, BIOME_NAME_MAP, searchBox, null, BIOME_MOD_IDS, null);
         this.resourceList.setRenderTopAndBottom(false);
         this.resourceList.setLeftPos(leftPos);
         this.addRenderableWidget(this.resourceList);

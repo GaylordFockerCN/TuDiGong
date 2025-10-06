@@ -37,6 +37,7 @@ public class JECharactersIntegration {
             try {
                 return (boolean) matchesMethod.invoke(null, text, query);
             } catch (Exception e) {
+                LOGGER.error("Failed to invoke JECharacters match method", e);
                 return text.toLowerCase().contains(query.toLowerCase());
             }
         }

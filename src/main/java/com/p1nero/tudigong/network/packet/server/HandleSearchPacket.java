@@ -3,7 +3,7 @@ package com.p1nero.tudigong.network.packet.server;
 import com.p1nero.dialog_lib.network.packet.BasePacket;
 import com.p1nero.tudigong.entity.TudiGongEntity;
 import com.p1nero.tudigong.util.StructureTagManager;
-import com.p1nero.tudigong.util.StructureUtil;
+import com.p1nero.tudigong.util.StructureUtils;
 import net.minecraft.ResourceLocationException;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
@@ -18,6 +18,7 @@ import java.util.Optional;
 public record HandleSearchPacket(int entityID, String searchString, boolean isStructure) implements BasePacket {
 
     private static final String TAG_PREFIX = "#";
+    private static final String SET_PREFIX = "$";
 
     public void encode(FriendlyByteBuf buf) {
         buf.writeInt(this.entityID());
@@ -47,11 +48,14 @@ public record HandleSearchPacket(int entityID, String searchString, boolean isSt
     }
 
     private Optional<ResourceLocation> resolveResourceLocation(ServerPlayer player) {
-        if (isStructure && searchString.startsWith(TAG_PREFIX)) {
-            return handleTagSearch(player);
-        } else {
-            return handleDirectSearch(player);
+        if (isStructure) {
+            if (searchString.startsWith(TAG_PREFIX)) {
+                return handleTagSearch(player);
+            } else if (searchString.startsWith(SET_PREFIX)) {
+                return handleStructureSetSearch(player);
+            }
         }
+        return handleDirectSearch(player);
     }
 
     private Optional<ResourceLocation> handleTagSearch(ServerPlayer player) {
@@ -59,6 +63,15 @@ public record HandleSearchPacket(int entityID, String searchString, boolean isSt
         Optional<ResourceLocation> structureOpt = StructureTagManager.getRandomStructureForTag(tagName);
         if (structureOpt.isEmpty()) {
             player.sendSystemMessage(Component.translatable("error.tudigong.tag_not_found", tagName));
+        }
+        return structureOpt;
+    }
+
+    private Optional<ResourceLocation> handleStructureSetSearch(ServerPlayer player) {
+        String setName = searchString.substring(SET_PREFIX.length());
+        Optional<ResourceLocation> structureOpt = StructureUtils.getRandomStructureForSet(player.serverLevel(), setName);
+        if (structureOpt.isEmpty()) {
+            player.sendSystemMessage(Component.translatable("error.tudigong.set_not_found", setName));
         }
         return structureOpt;
     }
@@ -71,7 +84,7 @@ public record HandleSearchPacket(int entityID, String searchString, boolean isSt
             return Optional.of(resourceLocation);
         } catch (ResourceLocationException e) {
             // If that fails, try our fallback search by structure type name.
-            return StructureUtil.findStructureByTypeName(player.server.registryAccess(), searchString)
+            return StructureUtils.findStructureByTypeName(player.server.registryAccess(), searchString)
                     .map(key -> {
                         // If found, convert the key back to a location.
                         return Optional.of(key.location());

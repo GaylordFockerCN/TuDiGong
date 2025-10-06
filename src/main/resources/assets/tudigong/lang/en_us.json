@@ -77,8 +77,9 @@
   "command.tudigong.help.tag_list_all": "/tudigong tag list_all - Lists all defined tags.",
 
   "error.tudigong.tag_not_found": "Tag not found or is empty: %s",
+  "error.tudigong.set_not_found": "Structure set not found or is empty: %s",
   "error.tudigong.invalid_resource_location": "Invalid resource location: %s",
-  "gui.tudigong.search.placeholder": "Search by name, #tag, or @modid...",
+  "gui.tudigong.search.placeholder": "Search by name, #tag, @modid, or $set...",
   "gui.tudigong.history.found_at": "Found at: ",
   "gui.tudigong.history.pos_na": "Position not applicable",
   "gui.tudigong.history.teleport": "TP",

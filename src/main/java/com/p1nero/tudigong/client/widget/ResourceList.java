@@ -3,6 +3,8 @@ package com.p1nero.tudigong.client.widget;
 import com.google.common.collect.BiMap;
 import com.p1nero.tudigong.client.screen.StructureSearchScreen;
 import com.p1nero.tudigong.compat.JECharactersIntegration;
+import com.p1nero.tudigong.util.TextUtil;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.EditBox;
@@ -31,16 +33,18 @@ public class ResourceList extends ObjectSelectionList<ResourceList.Entry> {
     private final BiMap<ResourceLocation, String> map;
     private final Map<String, Set<ResourceLocation>> tags;
     private final Map<String, Set<ResourceLocation>> modIds;
+    private final Map<String, Set<ResourceLocation>> sets;
     private final EditBox box;
     private final Map<ResourceLocation, Set<String>> resourceToTagsMap;
 
-    public ResourceList(Minecraft minecraft, int width, int height, int y0, int y1, int itemHeight, BiMap<ResourceLocation, String> map, EditBox box, Map<String, Set<ResourceLocation>> tags, Map<String, Set<ResourceLocation>> modIds) {
+    public ResourceList(Minecraft minecraft, int width, int height, int y0, int y1, int itemHeight, BiMap<ResourceLocation, String> map, EditBox box, Map<String, Set<ResourceLocation>> tags, Map<String, Set<ResourceLocation>> modIds, Map<String, Set<ResourceLocation>> sets) {
         super(minecraft, width, height, y0, y1, itemHeight);
         this.setRenderBackground(false); // 泥土丑甚
         this.map = map;
         this.box = box;
         this.tags = tags;
         this.modIds = modIds;
+        this.sets = sets;
 
         // Pre-compute a reverse map from resource location to its tags for faster lookups
         this.resourceToTagsMap = new HashMap<>();
@@ -103,9 +107,9 @@ public class ResourceList extends ObjectSelectionList<ResourceList.Entry> {
         String lowerCaseKeyword = keyword.toLowerCase();
 
         // Handle prefix search
-        if (keyword.length() > 1 && (keyword.startsWith("#") || keyword.startsWith("@") || keyword.startsWith("$"))) {
+        if (keyword.startsWith("#") || keyword.startsWith("@") || keyword.startsWith("$")) {
             char prefix = keyword.charAt(0);
-            String term = keyword.substring(1);
+            String term = keyword.length() > 1 ? keyword.substring(1) : "";
             Map<String, Set<ResourceLocation>> lookupMap;
             switch (prefix) {
                 case '#':
@@ -117,17 +121,24 @@ public class ResourceList extends ObjectSelectionList<ResourceList.Entry> {
                     term = term.toLowerCase();
                     break;
                 case '$':
-                    lookupMap = StructureSearchScreen.STRUCTURE_SETS;
+                    lookupMap = this.sets;
+                    term = term.toLowerCase();
                     break;
                 default:
                     return Collections.emptyList();
             }
 
-            if (lookupMap != null && !term.isEmpty() && lookupMap.containsKey(term)) {
-                Set<ResourceLocation> matches = lookupMap.get(term);
+            if (lookupMap != null) {
+                String finalTerm = term;
+                Set<ResourceLocation> matches = lookupMap.entrySet().stream()
+                        .filter(entry -> entry.getKey().toLowerCase().contains(finalTerm))
+                        .flatMap(entry -> entry.getValue().stream())
+                        .collect(Collectors.toSet());
+
                 return matches.stream()
                         .map(this.map::get)
                         .filter(Objects::nonNull)
+                        .sorted()
                         .collect(Collectors.toList());
             }
         }
@@ -177,7 +188,7 @@ public class ResourceList extends ObjectSelectionList<ResourceList.Entry> {
                 lookupMap = this.modIds;
                 break;
             case '$':
-                lookupMap = StructureSearchScreen.STRUCTURE_SETS;
+                lookupMap = this.sets;
                 break;
             default:
                 return;
@@ -215,7 +226,24 @@ public class ResourceList extends ObjectSelectionList<ResourceList.Entry> {
 
         @Override
         public void render(GuiGraphics guiGraphics, int index, int top, int left, int width, int height, int mouseX, int mouseY, boolean isMouseOver, float partialTicks) {
-            guiGraphics.drawString(Minecraft.getInstance().font, this.value, left + 5, top + 5, 16777215, true);
+            guiGraphics.drawString(Minecraft.getInstance().font, this.value, left + 5, top + 2, 16777215, true);
+
+            ResourceLocation structureKey = StructureSearchScreen.STRUCTURE_NAME_MAP.inverse().get(this.value);
+            if (structureKey != null) {
+                List<ResourceLocation> dims = StructureSearchScreen.STRUCTURE_DIMENSIONS.get(structureKey);
+                if (dims != null && !dims.isEmpty()) {
+                    String dimString = dims.stream()
+                            .map(TextUtil::getDimensionName)
+                            .collect(Collectors.joining(", "));
+                    // to prevent text being too long
+                    Component dimComponent = Component.literal(dimString).withStyle(ChatFormatting.GRAY);
+                    int availableWidth = width - 10;
+                    if (minecraft.font.width(dimComponent) > availableWidth) {
+                        dimComponent = Component.literal(minecraft.font.plainSubstrByWidth(dimString, availableWidth - minecraft.font.width("...")) + "...").withStyle(ChatFormatting.GRAY);
+                    }
+                    guiGraphics.drawString(minecraft.font, dimComponent, left + 5, top + 12, 0xAAAAAA, true);
+                }
+            }
         }
 
         @Override

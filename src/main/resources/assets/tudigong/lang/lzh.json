@@ -76,10 +76,16 @@
   "command.tudigong.help.tag_list": "/tudigong tag list <標籤名> - 列標籤內結構",
   "command.tudigong.help.tag_list_all": "/tudigong tag list_all - 列所有標籤",
   "error.tudigong.tag_not_found": "標籤未見或空: %s",
+  "error.tudigong.set_not_found": "結構集未見或空: %s",
   "error.tudigong.invalid_resource_location": "資源地址無效: %s",
-  "gui.tudigong.search.placeholder": "以名、#標、@模組ID尋之...",
+  "gui.tudigong.search.placeholder": "以名、#標、@模組ID或$結構集尋之...",
   "gui.tudigong.history.title": "尋跡錄",
   "gui.tudigong.history.button": "史",
   "gui.tudigong.history.clear": "清錄",
-  "gui.tudigong.history.search_placeholder": "篩錄..."
+  "gui.tudigong.history.search_placeholder": "篩錄...",
+  "gui.tudigong.history.found_at": "尋於: ",
+  "gui.tudigong.history.pos_na": "無位可考",
+  "gui.tudigong.history.teleport": "傳送",
+  "history.tudigong.type.structure": "[秘境]",
+  "history.tudigong.type.biome": "[風水]"
 }

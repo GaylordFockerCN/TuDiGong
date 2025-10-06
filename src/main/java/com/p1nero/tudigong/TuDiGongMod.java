@@ -11,8 +11,11 @@ import com.p1nero.tudigong.item.TDGItemTabs;
 import com.p1nero.tudigong.item.TDGItems;
 import com.p1nero.tudigong.network.TDGPacketHandler;
 import com.p1nero.tudigong.network.packet.client.SyncResourceKeysPacket;
+import com.p1nero.tudigong.network.packet.client.SyncStructureDimensionsPacket;
+import com.p1nero.tudigong.network.packet.client.SyncStructureSetsPacket;
 import com.p1nero.tudigong.network.packet.client.SyncStructureTagsPacket;
 import com.p1nero.tudigong.util.StructureTagManager;
+import com.p1nero.tudigong.util.StructureUtils;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementProgress;
 import net.minecraft.core.BlockPos;
@@ -36,6 +39,8 @@ import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.levelgen.structure.Structure;
+import net.minecraft.world.level.levelgen.structure.StructureSet;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.MinecraftForge;
@@ -53,8 +58,12 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.slf4j.Logger;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
 
 @Mod(TuDiGongMod.MOD_ID)
 public class TuDiGongMod {
@@ -111,6 +120,8 @@ public class TuDiGongMod {
             syncRegistry(serverPlayer, Registries.STRUCTURE);
             syncRegistry(serverPlayer, Registries.BIOME);
             DialoguePacketRelay.sendToPlayer(TDGPacketHandler.INSTANCE, new SyncStructureTagsPacket(StructureTagManager.getTags()), serverPlayer);
+            syncStructureSets(serverPlayer);
+            syncStructureDimensions(serverPlayer);
         }
     }
 
@@ -122,6 +133,37 @@ public class TuDiGongMod {
             }));
         });
         DialoguePacketRelay.sendToPlayer(TDGPacketHandler.INSTANCE, new SyncResourceKeysPacket(resourceLocations, registry == Registries.STRUCTURE), serverPlayer);
+    }
+
+    public static void syncStructureSets(ServerPlayer serverPlayer) {
+        Map<String, Set<ResourceLocation>> structureSets = new HashMap<>();
+        Registry<StructureSet> registry = serverPlayer.serverLevel().registryAccess().registryOrThrow(Registries.STRUCTURE_SET);
+        registry.entrySet().forEach(entry -> {
+            ResourceLocation setLocation = entry.getKey().location();
+            Set<ResourceLocation> structures = new HashSet<>();
+            entry.getValue().structures().forEach(selectionEntry -> {
+                selectionEntry.structure().unwrapKey().ifPresent(key -> structures.add(key.location()));
+            });
+            if (!structures.isEmpty()) {
+                structureSets.put(setLocation.toString(), structures);
+            }
+        });
+        DialoguePacketRelay.sendToPlayer(TDGPacketHandler.INSTANCE, new SyncStructureSetsPacket(structureSets), serverPlayer);
+    }
+
+    public static void syncStructureDimensions(ServerPlayer serverPlayer) {
+        Map<ResourceLocation, List<ResourceLocation>> structureDimensions = new HashMap<>();
+        Registry<Structure> structureRegistry = serverPlayer.serverLevel().registryAccess().registryOrThrow(Registries.STRUCTURE);
+        structureRegistry.forEach(structure -> {
+            ResourceLocation key = structureRegistry.getKey(structure);
+            if (key != null) {
+                List<ResourceLocation> dims = StructureUtils.getGeneratingDimensionKeys(serverPlayer.serverLevel(), structure);
+                if (!dims.isEmpty()) {
+                    structureDimensions.put(key, dims);
+                }
+            }
+        });
+        DialoguePacketRelay.sendToPlayer(TDGPacketHandler.INSTANCE, new SyncStructureDimensionsPacket(structureDimensions), serverPlayer);
     }
 
     private void onBlockChange(BlockEvent.EntityPlaceEvent event) {

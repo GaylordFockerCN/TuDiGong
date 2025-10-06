@@ -1,6 +1,7 @@
 package com.p1nero.tudigong.util;
 
 import com.p1nero.tudigong.client.screen.StructureSearchScreen;
+import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -9,6 +10,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import org.apache.commons.lang3.text.WordUtils;
 
 public class TextUtil {
     private static final String[] DIRECTIONS = {
@@ -43,8 +45,21 @@ public class TextUtil {
     @OnlyIn(Dist.CLIENT)
     public static String tryToGetName(ResourceLocation resourceLocation) {
         if (StructureSearchScreen.STRUCTURE_NAME_MAP.containsKey(resourceLocation)){
-            return StructureUtil.getStructureName(resourceLocation);
+            return StructureUtils.getPrettyStructureName(resourceLocation);
         }
         return BiomeUtil.getBiomeName(resourceLocation);
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    public static String getDimensionName(ResourceLocation dimensionKey) {
+        String name = I18n.get(net.minecraft.Util.makeDescriptionId("dimension", dimensionKey));
+        if (name.equals(net.minecraft.Util.makeDescriptionId("dimension", dimensionKey))) {
+            name = dimensionKey.toString();
+            if (name.contains(":")) {
+                name = name.substring(name.indexOf(":") + 1);
+            }
+            name = WordUtils.capitalize(name.replace('_', ' '));
+        }
+        return name;
     }
 }

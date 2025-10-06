@@ -3,6 +3,10 @@ package com.p1nero.tudigong.client.widget;
 import com.p1nero.tudigong.client.util.SearchHistoryManager;
 import com.p1nero.tudigong.client.util.SearchHistoryManager.SearchHistoryEntry;
 import com.p1nero.tudigong.compat.JECharactersIntegration;
+import com.p1nero.dialog_lib.network.DialoguePacketRelay;
+import com.p1nero.tudigong.network.TDGPacketHandler;
+import com.p1nero.tudigong.network.packet.server.TeleportToServerPacket;
+import com.p1nero.tudigong.util.TextUtil;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -39,11 +43,16 @@ public class HistoryList extends ObjectSelectionList<HistoryList.Entry> {
         if (!StringUtil.isNullOrEmpty(keyword)) {
             String lowerCaseKeyword = keyword.toLowerCase();
             stream = stream.filter(entry -> {
+                String translatedName = TextUtil.tryToGetName(entry.searchTerm());
+                if (JECharactersIntegration.match(translatedName, lowerCaseKeyword)) return true;
                 if (JECharactersIntegration.match(entry.searchTerm(), lowerCaseKeyword)) return true;
                 if (JECharactersIntegration.match(entry.type().getString(), lowerCaseKeyword)) return true;
                 if (entry.position() != null) {
                     String posString = entry.position().getX() + ", " + entry.position().getY() + ", " + entry.position().getZ();
                     if (posString.contains(lowerCaseKeyword)) return true;
+                }
+                if (entry.dimension() != null) {
+                    if (entry.dimension().location().toString().toLowerCase().contains(lowerCaseKeyword)) return true;
                 }
                 String timestamp = new SimpleDateFormat("yyyy-MM-dd HH:mm").format(new Date(entry.timestamp()));
                 return timestamp.contains(lowerCaseKeyword);
@@ -68,6 +77,7 @@ public class HistoryList extends ObjectSelectionList<HistoryList.Entry> {
         private final HistoryList parentList;
         private final SearchHistoryEntry historyEntry;
         private final Button deleteButton;
+        private final Button teleportButton;
         private final Minecraft minecraft;
         private final ItemStack icon;
 
@@ -80,6 +90,13 @@ public class HistoryList extends ObjectSelectionList<HistoryList.Entry> {
                 SearchHistoryManager.remove(historyEntry);
                 this.parentList.filter(null); // Refresh the list
             }).bounds(0, 0, 20, 20).build();
+
+            this.teleportButton = Button.builder(Component.translatable("gui.tudigong.history.teleport"), (button) -> {
+                if (historyEntry.position() != null && historyEntry.dimension() != null) {
+                    DialoguePacketRelay.sendToServer(TDGPacketHandler.INSTANCE, new TeleportToServerPacket(historyEntry.position(), historyEntry.dimension()));
+                }
+            }).bounds(0, 0, 30, 20).build();
+            this.teleportButton.visible = historyEntry.position() != null;
 
             boolean isStructure = historyEntry.type().getString().equalsIgnoreCase(Component.translatable("history.tudigong.type.structure").getString());
             this.icon = new ItemStack(isStructure ? Items.COMPASS : Items.GRASS_BLOCK);
@@ -94,16 +111,27 @@ public class HistoryList extends ObjectSelectionList<HistoryList.Entry> {
             guiGraphics.renderFakeItem(this.icon, left + 8, top + 12);
 
             // Render Search Term
-            Component mainText = Component.literal(historyEntry.searchTerm()).withStyle(ChatFormatting.WHITE);
+            String translatedName = TextUtil.tryToGetName(historyEntry.searchTerm());
+            Component mainText = Component.literal(translatedName).withStyle(ChatFormatting.WHITE);
             guiGraphics.drawString(minecraft.font, mainText, left + 35, top + 7, 0xFFFFFF, true);
 
             // Render Position
             if (historyEntry.position() != null) {
                 BlockPos pos = historyEntry.position();
-                String posString = pos.getX() + ", " + pos.getY() + ", " + pos.getZ();
-                MutableComponent posComponent = Component.literal(posString)
+                String yString = pos.getY() == -1145 ? "~" : String.valueOf(pos.getY());
+                String posString = pos.getX() + ", " + yString + ", " + pos.getZ();
+                String dimensionName = "";
+                String tpY = pos.getY() == -1145 ? "~" : String.valueOf(pos.getY());
+                String tpCommand = "/tp @s " + pos.getX() + " " + tpY + " " + pos.getZ();
+                if (historyEntry.dimension() != null) {
+                    dimensionName = " (" + historyEntry.dimension().location().getPath() + ")";
+                    tpCommand = "/execute as @s in " + historyEntry.dimension().location() + " run " + tpCommand;
+                }
+
+                String finalTpCommand = tpCommand;
+                MutableComponent posComponent = Component.literal(posString + dimensionName)
                         .withStyle(style -> style.withColor(ChatFormatting.GREEN)
-                                .withClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/tp @s " + pos.getX() + " " + pos.getY() + " " + pos.getZ()))
+                                .withClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, finalTpCommand))
                                 .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.translatable("chat.coordinates.tooltip"))));
                 guiGraphics.drawString(minecraft.font, posComponent, left + 35, top + 20, 0xFFFFFF);
             } else {
@@ -113,16 +141,26 @@ public class HistoryList extends ObjectSelectionList<HistoryList.Entry> {
             // Render Timestamp
             String timestamp = new SimpleDateFormat("yy/MM/dd HH:mm").format(new Date(historyEntry.timestamp()));
             int timestampWidth = this.minecraft.font.width(timestamp);
-            guiGraphics.drawString(this.minecraft.font, timestamp, left + width - timestampWidth - 30, top + 7, 0xAAAAAA);
+            int rightPadding = this.teleportButton.visible ? 65 : 30;
+            guiGraphics.drawString(this.minecraft.font, timestamp, left + width - timestampWidth - rightPadding, top + 7, 0xAAAAAA);
 
-            // Render Delete Button
+            // Render Buttons
             this.deleteButton.setX(left + width - this.deleteButton.getWidth() - 5);
             this.deleteButton.setY(top + (height - this.deleteButton.getHeight()) / 2);
             this.deleteButton.render(guiGraphics, mouseX, mouseY, partialTicks);
+
+            if (this.teleportButton.visible) {
+                this.teleportButton.setX(this.deleteButton.getX() - this.teleportButton.getWidth() - 5);
+                this.teleportButton.setY(top + (height - this.teleportButton.getHeight()) / 2);
+                this.teleportButton.render(guiGraphics, mouseX, mouseY, partialTicks);
+            }
         }
 
         @Override
         public boolean mouseClicked(double mouseX, double mouseY, int button) {
+            if (this.teleportButton.mouseClicked(mouseX, mouseY, button)) {
+                return true;
+            }
             if (this.deleteButton.mouseClicked(mouseX, mouseY, button)) {
                 return true;
             }

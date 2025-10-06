@@ -13,7 +13,7 @@ import com.p1nero.tudigong.compat.XaeroMapCompat;
 import com.p1nero.tudigong.network.TDGPacketHandler;
 import com.p1nero.tudigong.network.packet.client.SyncHistoryEntryPacket;
 import com.p1nero.tudigong.util.BiomeUtil;
-import com.p1nero.tudigong.util.StructureUtil;
+import com.p1nero.tudigong.util.StructureUtils;
 import com.p1nero.tudigong.util.TextUtil;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
@@ -280,7 +280,7 @@ public class TudiGongEntity extends PathfinderMob implements IEntityNpc {
             serverPlayer.displayClientMessage(ComponentUtils.wrapInSquareBrackets(this.getDisplayName()).append(": ").append(Component.translatable("entity.tudigong.tudigong.answer5")), false);
             return;
         }
-        BlockPos blockpos = isStructure ? StructureUtil.getNearbyStructurePos(serverPlayer, resourceLocation.toString(), -1145) : BiomeUtil.getNearbyBiomePos(serverPlayer, resourceLocation.toString());
+        BlockPos blockpos = isStructure ? StructureUtils.getNearbyStructurePos(serverPlayer, resourceLocation.toString(), -1145) : BiomeUtil.getNearbyBiomePos(serverPlayer, resourceLocation.toString());
         if(blockpos == null) {
             LOGGER.warn("Could not find location for {}, possibly blocked by other mods.", resourceLocation.toString());
             serverPlayer.displayClientMessage(ComponentUtils.wrapInSquareBrackets(this.getDisplayName()).append(": ").append(Component.translatable("entity.tudigong.tudigong.answer5")), false);
@@ -289,8 +289,7 @@ public class TudiGongEntity extends PathfinderMob implements IEntityNpc {
 
         // Send successful search result back to client for history
         Component typeComponent = Component.translatable(isStructure ? "history.tudigong.type.structure" : "history.tudigong.type.biome");
-        BlockPos historyPos = blockpos.getY() == -1145 ? null : blockpos;
-        SyncHistoryEntryPacket historyPacket = new SyncHistoryEntryPacket(originalSearchTerm, typeComponent, historyPos);
+        SyncHistoryEntryPacket historyPacket = new SyncHistoryEntryPacket(originalSearchTerm, typeComponent, blockpos, serverPlayer.level().dimension());
         DialoguePacketRelay.sendToPlayer(TDGPacketHandler.INSTANCE, historyPacket, serverPlayer);
 
         // Display Title

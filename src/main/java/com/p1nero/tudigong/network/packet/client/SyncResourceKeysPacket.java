@@ -4,7 +4,7 @@ import com.p1nero.dialog_lib.network.packet.BasePacket;
 import com.p1nero.tudigong.client.screen.BiomeSearchScreen;
 import com.p1nero.tudigong.client.screen.StructureSearchScreen;
 import com.p1nero.tudigong.util.BiomeUtil;
-import com.p1nero.tudigong.util.StructureUtil;
+import com.p1nero.tudigong.util.StructureUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
@@ -39,7 +39,7 @@ public record SyncResourceKeysPacket(List<ResourceLocation> resourceLocations, b
                 StructureSearchScreen.STRUCTURE_NAME_MAP.clear();
                 StructureSearchScreen.STRUCTURE_MOD_IDS.clear();
                 resourceLocations.forEach((resourceLocation -> {
-                    StructureSearchScreen.STRUCTURE_NAME_MAP.put(resourceLocation, StructureUtil.getStructureName(resourceLocation));
+                    StructureSearchScreen.STRUCTURE_NAME_MAP.put(resourceLocation, StructureUtils.getPrettyStructureName(resourceLocation));
                     String modId = resourceLocation.getNamespace().toLowerCase();
                     StructureSearchScreen.STRUCTURE_MOD_IDS.computeIfAbsent(modId, k -> new java.util.HashSet<>()).add(resourceLocation);
                 }));

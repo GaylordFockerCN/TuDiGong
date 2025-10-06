@@ -77,8 +77,9 @@
   "command.tudigong.help.tag_list_all": "/tudigong tag list_all - 列出所有已定义标签.",
 
   "error.tudigong.tag_not_found": "未找到或空的标签: %s",
+  "error.tudigong.set_not_found": "未找到或空的结构集: %s",
   "error.tudigong.invalid_resource_location": "无效的资源路径: %s",
-  "gui.tudigong.search.placeholder": "按名称、#标签或@模组ID搜索...",
+  "gui.tudigong.search.placeholder": "按名称、#标签、@模组ID或$结构集搜索...",
   "gui.tudigong.history.found_at": "发现于: ",
   "gui.tudigong.history.pos_na": "无坐标信息",
   "gui.tudigong.history.teleport": "传送",

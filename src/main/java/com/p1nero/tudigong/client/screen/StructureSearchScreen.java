@@ -19,6 +19,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -33,6 +34,7 @@ public class StructureSearchScreen extends Screen {
     public static final Map<String, Set<ResourceLocation>> STRUCTURE_TAGS = new HashMap<>();
     public static final Map<String, Set<ResourceLocation>> STRUCTURE_MOD_IDS = new HashMap<>();
     public static final Map<String, Set<ResourceLocation>> STRUCTURE_SETS = new HashMap<>();
+    public static final Map<ResourceLocation, List<ResourceLocation>> STRUCTURE_DIMENSIONS = new HashMap<>();
 
     public StructureSearchScreen(int tudigongId) {
         super(Component.literal(""));
@@ -64,7 +66,7 @@ public class StructureSearchScreen extends Screen {
         this.addRenderableWidget(this.searchButton);
 
         int listY = topPos + 44 + 2;
-        this.resourceList = new ResourceList(Minecraft.getInstance(), inputBoxWidth, this.height, listY, this.height - 30, 21, STRUCTURE_NAME_MAP, searchBox, STRUCTURE_TAGS, STRUCTURE_MOD_IDS);
+        this.resourceList = new ResourceList(Minecraft.getInstance(), inputBoxWidth, this.height, listY, this.height - 30, 21, STRUCTURE_NAME_MAP, searchBox, STRUCTURE_TAGS, STRUCTURE_MOD_IDS, STRUCTURE_SETS);
         this.resourceList.setRenderTopAndBottom(false);
         this.resourceList.setLeftPos(leftPos);
         this.addRenderableWidget(this.resourceList);
