@@ -8,6 +8,7 @@ import com.p1nero.tudigong.network.packet.client.SyncHistoryEntryPacket;
 import com.p1nero.tudigong.network.packet.client.SyncResourceKeysPacket;
 import com.p1nero.tudigong.network.packet.client.SyncStructureDimensionsPacket;
 import com.p1nero.tudigong.network.packet.client.SyncStructureSetsPacket;
+import com.p1nero.tudigong.network.packet.client.SyncBiomeDimensionsPacket;
 import com.p1nero.tudigong.network.packet.client.SyncStructureTagsPacket;
 import com.p1nero.tudigong.network.packet.server.HandleSearchPacket;
 import com.p1nero.tudigong.network.packet.server.TeleportToServerPacket;
@@ -34,6 +35,7 @@ public class TDGPacketHandler {
         register(SyncStructureTagsPacket.class, SyncStructureTagsPacket::decode);
         register(SyncStructureSetsPacket.class, SyncStructureSetsPacket::decode);
         register(SyncStructureDimensionsPacket.class, SyncStructureDimensionsPacket::decode);
+        register(SyncBiomeDimensionsPacket.class, SyncBiomeDimensionsPacket::decode);
         register(SyncHistoryEntryPacket.class, SyncHistoryEntryPacket::decode);
 
         register(HandleSearchPacket.class, HandleSearchPacket::decode);

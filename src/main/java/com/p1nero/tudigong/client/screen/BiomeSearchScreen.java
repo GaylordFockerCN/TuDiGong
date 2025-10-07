@@ -21,6 +21,8 @@ import org.lwjgl.glfw.GLFW;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.List;
+
 
 @OnlyIn(Dist.CLIENT)
 public class BiomeSearchScreen extends Screen {
@@ -31,6 +33,7 @@ public class BiomeSearchScreen extends Screen {
     private boolean found;
     public static final BiMap<ResourceLocation, String> BIOME_NAME_MAP = HashBiMap.create();
     public static final Map<String, Set<ResourceLocation>> BIOME_MOD_IDS = new HashMap<>();
+    public static final Map<ResourceLocation, List<ResourceLocation>> BIOME_DIMENSIONS = new HashMap<>();
 
     public BiomeSearchScreen(int tudigongId) {
         super(Component.literal(""));
@@ -62,7 +65,7 @@ public class BiomeSearchScreen extends Screen {
         this.addRenderableWidget(this.searchButton);
 
         int listY = topPos + 44 + 2;
-        this.resourceList = new ResourceList(Minecraft.getInstance(), inputBoxWidth, this.height, listY, this.height - 30, 21, BIOME_NAME_MAP, searchBox, null, BIOME_MOD_IDS, null);
+        this.resourceList = new ResourceList(Minecraft.getInstance(), inputBoxWidth, this.height, listY, this.height - 30, 21, BIOME_NAME_MAP, searchBox, null, BIOME_MOD_IDS, null, BIOME_DIMENSIONS);
         this.resourceList.setRenderTopAndBottom(false);
         this.resourceList.setLeftPos(leftPos);
         this.addRenderableWidget(this.resourceList);

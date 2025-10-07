@@ -10,6 +10,7 @@ import com.p1nero.tudigong.entity.TudiGongEntity;
 import com.p1nero.tudigong.item.TDGItemTabs;
 import com.p1nero.tudigong.item.TDGItems;
 import com.p1nero.tudigong.network.TDGPacketHandler;
+import com.p1nero.tudigong.network.packet.client.SyncBiomeDimensionsPacket;
 import com.p1nero.tudigong.network.packet.client.SyncResourceKeysPacket;
 import com.p1nero.tudigong.network.packet.client.SyncStructureDimensionsPacket;
 import com.p1nero.tudigong.network.packet.client.SyncStructureSetsPacket;
@@ -39,6 +40,7 @@ import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.world.level.levelgen.structure.StructureSet;
 import net.minecraft.world.phys.AABB;
@@ -122,7 +124,28 @@ public class TuDiGongMod {
             DialoguePacketRelay.sendToPlayer(TDGPacketHandler.INSTANCE, new SyncStructureTagsPacket(StructureTagManager.getTags()), serverPlayer);
             syncStructureSets(serverPlayer);
             syncStructureDimensions(serverPlayer);
+            syncBiomeDimensions(serverPlayer);
         }
+    }
+
+    public static void syncBiomeDimensions(ServerPlayer serverPlayer) {
+        Map<ResourceLocation, List<ResourceLocation>> biomeDimensions = new HashMap<>();
+        Registry<Biome> biomeRegistry = serverPlayer.serverLevel().registryAccess().registryOrThrow(Registries.BIOME);
+
+        biomeRegistry.holders().forEach(biomeHolder -> {
+            biomeHolder.unwrapKey().ifPresent(biomeResourceKey -> {
+                List<ResourceLocation> dims = new ArrayList<>();
+                for (ServerLevel level : serverPlayer.getServer().getAllLevels()) {
+                    if (level.getChunkSource().getGenerator().getBiomeSource().possibleBiomes().contains(biomeHolder)) {
+                        dims.add(level.dimension().location());
+                    }
+                }
+                if (!dims.isEmpty()) {
+                    biomeDimensions.put(biomeResourceKey.location(), dims);
+                }
+            });
+        });
+        DialoguePacketRelay.sendToPlayer(TDGPacketHandler.INSTANCE, new SyncBiomeDimensionsPacket(biomeDimensions), serverPlayer);
     }
 
     public static void syncRegistry(ServerPlayer serverPlayer, ResourceKey<? extends Registry<?>> registry) {

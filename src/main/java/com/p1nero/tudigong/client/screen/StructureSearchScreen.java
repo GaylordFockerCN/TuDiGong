@@ -66,7 +66,7 @@ public class StructureSearchScreen extends Screen {
         this.addRenderableWidget(this.searchButton);
 
         int listY = topPos + 44 + 2;
-        this.resourceList = new ResourceList(Minecraft.getInstance(), inputBoxWidth, this.height, listY, this.height - 30, 21, STRUCTURE_NAME_MAP, searchBox, STRUCTURE_TAGS, STRUCTURE_MOD_IDS, STRUCTURE_SETS);
+        this.resourceList = new ResourceList(Minecraft.getInstance(), inputBoxWidth, this.height, listY, this.height - 30, 21, STRUCTURE_NAME_MAP, searchBox, STRUCTURE_TAGS, STRUCTURE_MOD_IDS, STRUCTURE_SETS, STRUCTURE_DIMENSIONS);
         this.resourceList.setRenderTopAndBottom(false);
         this.resourceList.setLeftPos(leftPos);
         this.addRenderableWidget(this.resourceList);

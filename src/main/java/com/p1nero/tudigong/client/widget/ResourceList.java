@@ -34,10 +34,11 @@ public class ResourceList extends ObjectSelectionList<ResourceList.Entry> {
     private final Map<String, Set<ResourceLocation>> tags;
     private final Map<String, Set<ResourceLocation>> modIds;
     private final Map<String, Set<ResourceLocation>> sets;
+    private final Map<ResourceLocation, List<ResourceLocation>> dimensions;
     private final EditBox box;
     private final Map<ResourceLocation, Set<String>> resourceToTagsMap;
 
-    public ResourceList(Minecraft minecraft, int width, int height, int y0, int y1, int itemHeight, BiMap<ResourceLocation, String> map, EditBox box, Map<String, Set<ResourceLocation>> tags, Map<String, Set<ResourceLocation>> modIds, Map<String, Set<ResourceLocation>> sets) {
+    public ResourceList(Minecraft minecraft, int width, int height, int y0, int y1, int itemHeight, BiMap<ResourceLocation, String> map, EditBox box, Map<String, Set<ResourceLocation>> tags, Map<String, Set<ResourceLocation>> modIds, Map<String, Set<ResourceLocation>> sets, Map<ResourceLocation, List<ResourceLocation>> dimensions) {
         super(minecraft, width, height, y0, y1, itemHeight);
         this.setRenderBackground(false); // 泥土丑甚
         this.map = map;
@@ -45,6 +46,7 @@ public class ResourceList extends ObjectSelectionList<ResourceList.Entry> {
         this.tags = tags;
         this.modIds = modIds;
         this.sets = sets;
+        this.dimensions = dimensions;
 
         // Pre-compute a reverse map from resource location to its tags for faster lookups
         this.resourceToTagsMap = new HashMap<>();
@@ -228,9 +230,9 @@ public class ResourceList extends ObjectSelectionList<ResourceList.Entry> {
         public void render(GuiGraphics guiGraphics, int index, int top, int left, int width, int height, int mouseX, int mouseY, boolean isMouseOver, float partialTicks) {
             guiGraphics.drawString(Minecraft.getInstance().font, this.value, left + 5, top + 2, 16777215, true);
 
-            ResourceLocation structureKey = StructureSearchScreen.STRUCTURE_NAME_MAP.inverse().get(this.value);
-            if (structureKey != null) {
-                List<ResourceLocation> dims = StructureSearchScreen.STRUCTURE_DIMENSIONS.get(structureKey);
+            ResourceLocation resourceKey = ResourceList.this.map.inverse().get(this.value);
+            if (resourceKey != null && ResourceList.this.dimensions != null) {
+                List<ResourceLocation> dims = ResourceList.this.dimensions.get(resourceKey);
                 if (dims != null && !dims.isEmpty()) {
                     String dimString = dims.stream()
                             .map(TextUtil::getDimensionName)
