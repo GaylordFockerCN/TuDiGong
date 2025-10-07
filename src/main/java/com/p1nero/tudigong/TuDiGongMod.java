@@ -10,11 +10,7 @@ import com.p1nero.tudigong.entity.TudiGongEntity;
 import com.p1nero.tudigong.item.TDGItemTabs;
 import com.p1nero.tudigong.item.TDGItems;
 import com.p1nero.tudigong.network.TDGPacketHandler;
-import com.p1nero.tudigong.network.packet.client.SyncBiomeDimensionsPacket;
-import com.p1nero.tudigong.network.packet.client.SyncResourceKeysPacket;
-import com.p1nero.tudigong.network.packet.client.SyncStructureDimensionsPacket;
-import com.p1nero.tudigong.network.packet.client.SyncStructureSetsPacket;
-import com.p1nero.tudigong.network.packet.client.SyncStructureTagsPacket;
+import com.p1nero.tudigong.network.packet.client.*;
 import com.p1nero.tudigong.util.StructureTagManager;
 import com.p1nero.tudigong.util.StructureUtils;
 import net.minecraft.advancements.Advancement;
@@ -59,13 +55,7 @@ import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.slf4j.Logger;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 @Mod(TuDiGongMod.MOD_ID)
 public class TuDiGongMod {
@@ -125,6 +115,7 @@ public class TuDiGongMod {
             syncStructureSets(serverPlayer);
             syncStructureDimensions(serverPlayer);
             syncBiomeDimensions(serverPlayer);
+            syncStructureTypes(serverPlayer);
         }
     }
 
@@ -187,6 +178,10 @@ public class TuDiGongMod {
             }
         });
         DialoguePacketRelay.sendToPlayer(TDGPacketHandler.INSTANCE, new SyncStructureDimensionsPacket(structureDimensions), serverPlayer);
+    }
+
+    public static void syncStructureTypes(ServerPlayer serverPlayer) {
+        DialoguePacketRelay.sendToPlayer(TDGPacketHandler.INSTANCE, new SyncStructureTypesPacket(StructureUtils.getTypeKeysToStructureKeys(serverPlayer.serverLevel()).asMap(), StructureUtils.getStructureKeysToTypeKeys(serverPlayer.serverLevel())), serverPlayer);
     }
 
     private void onBlockChange(BlockEvent.EntityPlaceEvent event) {

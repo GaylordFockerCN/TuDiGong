@@ -4,7 +4,6 @@ import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import com.p1nero.dialog_lib.network.DialoguePacketRelay;
 import com.p1nero.dialog_lib.network.packet.serverbound.HandleNpcEntityPlayerInteractPacket;
-import com.p1nero.tudigong.client.screen.HistoryScreen;
 import com.p1nero.tudigong.client.widget.ResourceList;
 import com.p1nero.tudigong.network.TDGPacketHandler;
 import com.p1nero.tudigong.network.packet.server.HandleSearchPacket;
@@ -19,9 +18,9 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.List;
 
 
 @OnlyIn(Dist.CLIENT)
@@ -65,7 +64,7 @@ public class BiomeSearchScreen extends Screen {
         this.addRenderableWidget(this.searchButton);
 
         int listY = topPos + 44 + 2;
-        this.resourceList = new ResourceList(Minecraft.getInstance(), inputBoxWidth, this.height, listY, this.height - 30, 21, BIOME_NAME_MAP, searchBox, null, BIOME_MOD_IDS, null, BIOME_DIMENSIONS);
+        this.resourceList = new ResourceList(Minecraft.getInstance(), inputBoxWidth, this.height, listY, this.height - 30, 21, BIOME_NAME_MAP, searchBox, null, BIOME_MOD_IDS, null, BIOME_DIMENSIONS, null, null);
         this.resourceList.setRenderTopAndBottom(false);
         this.resourceList.setLeftPos(leftPos);
         this.addRenderableWidget(this.resourceList);

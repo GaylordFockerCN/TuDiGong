@@ -23,6 +23,7 @@ import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.world.level.levelgen.structure.StructureSet;
 import net.minecraft.world.level.levelgen.structure.StructureType;
+
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.ModContainer;
@@ -59,6 +60,10 @@ public class StructureUtils {
                     return registry.getKey(set);
                 }
             }
+        }
+        ResourceLocation structureKey = getKeyForStructure(level, structure);
+        if (structureKey != null) {
+            return new ResourceLocation(structureKey.getNamespace(), "mod_provided");
         }
         return ResourceLocation.fromNamespaceAndPath("tudigong", "none");
     }
@@ -104,8 +109,7 @@ public class StructureUtils {
     public static List<ResourceLocation> getGeneratingDimensionKeys(ServerLevel serverLevel, Structure structure) {
         final List<ResourceLocation> dimensions = new ArrayList<>();
         for (ServerLevel level : serverLevel.getServer().getAllLevels()) {
-            ChunkGenerator chunkGenerator = level.getChunkSource().getGenerator();
-            Set<Holder<Biome>> biomeSet = chunkGenerator.getBiomeSource().possibleBiomes();
+            Set<Holder<Biome>> biomeSet = level.getChunkSource().getGenerator().getBiomeSource().possibleBiomes();
             if (structure.biomes().stream().anyMatch(biomeSet::contains)) {
                 dimensions.add(level.dimension().location());
             }

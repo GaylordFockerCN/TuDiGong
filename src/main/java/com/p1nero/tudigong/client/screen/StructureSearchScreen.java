@@ -34,6 +34,8 @@ public class StructureSearchScreen extends Screen {
     public static final Map<String, Set<ResourceLocation>> STRUCTURE_TAGS = new HashMap<>();
     public static final Map<String, Set<ResourceLocation>> STRUCTURE_MOD_IDS = new HashMap<>();
     public static final Map<String, Set<ResourceLocation>> STRUCTURE_SETS = new HashMap<>();
+    public static final Map<String, Set<ResourceLocation>> STRUCTURE_TYPES = new HashMap<>();
+    public static final Map<ResourceLocation, ResourceLocation> STRUCTURE_TO_TYPE_MAP = new HashMap<>();
     public static final Map<ResourceLocation, List<ResourceLocation>> STRUCTURE_DIMENSIONS = new HashMap<>();
 
     public StructureSearchScreen(int tudigongId) {
@@ -66,7 +68,7 @@ public class StructureSearchScreen extends Screen {
         this.addRenderableWidget(this.searchButton);
 
         int listY = topPos + 44 + 2;
-        this.resourceList = new ResourceList(Minecraft.getInstance(), inputBoxWidth, this.height, listY, this.height - 30, 21, STRUCTURE_NAME_MAP, searchBox, STRUCTURE_TAGS, STRUCTURE_MOD_IDS, STRUCTURE_SETS, STRUCTURE_DIMENSIONS);
+        this.resourceList = new ResourceList(Minecraft.getInstance(), inputBoxWidth, this.height, listY, this.height - 30, 31, STRUCTURE_NAME_MAP, searchBox, STRUCTURE_TAGS, STRUCTURE_MOD_IDS, STRUCTURE_SETS, STRUCTURE_DIMENSIONS, STRUCTURE_TYPES, STRUCTURE_TO_TYPE_MAP);
         this.resourceList.setRenderTopAndBottom(false);
         this.resourceList.setLeftPos(leftPos);
         this.addRenderableWidget(this.resourceList);
