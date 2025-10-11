@@ -21,6 +21,7 @@ public class TDGConfig {
     static { BUILDER.pop(); }
 
     static { BUILDER.push("Searching"); }
+    public static final ForgeConfigSpec.BooleanValue AVOID_DUPLICATE_SEARCHES = BUILDER.comment("When searching for structures, try to find structures in unexplored chunks. This may increase search times and is not applicable to biome searches.").define("avoid_duplicate_searches", true);
     public static final ForgeConfigSpec.IntValue STRUCTURE_SEARCH_RADIUS_CHUNKS = BUILDER.comment("The search radius in chunks for structures.").defineInRange("structure_search_radius_chunks", 100, 10, 500);
     public static final ForgeConfigSpec.IntValue BIOME_SEARCH_RADIUS_BLOCKS = BUILDER.comment("The search radius in blocks for biomes.").defineInRange("biome_search_radius_blocks", 6400, 100, 20000);
     public static final ForgeConfigSpec.IntValue HIGHLIGHT_DISTANCE_BLOCKS = BUILDER.comment("Distance in blocks from the destination to trigger the glowing highlight effect.").defineInRange("highlight_distance_blocks", 144, 16, 512);

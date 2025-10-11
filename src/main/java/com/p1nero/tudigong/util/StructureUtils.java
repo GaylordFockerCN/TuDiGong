@@ -260,7 +260,7 @@ public class StructureUtils {
                 structureSet,
                 playerPos,
                 TDGConfig.STRUCTURE_SEARCH_RADIUS_CHUNKS.get(),
-                false
+                TDGConfig.AVOID_DUPLICATE_SEARCHES.get()
         );
 
         if (result != null) {
