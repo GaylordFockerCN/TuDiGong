@@ -164,7 +164,7 @@ dependencies {
     // then special handling is done to allow a setup of a vanilla dependency without the use of an external repository.
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
 
-    implementation fg.deobf("curse.maven:p1neros-dialogue-lib-1274526:7152732")
+    implementation fg.deobf("curse.maven:p1neros-dialogue-lib-1274526:7163593")
     implementation fg.deobf("curse.maven:just-enough-characters-250702:6680042")
 //    implementation fg.deobf("curse.maven:contingameime-835640:5086866")
     implementation fg.deobf("curse.maven:xaeros-world-map-317780:6212636")//大地图

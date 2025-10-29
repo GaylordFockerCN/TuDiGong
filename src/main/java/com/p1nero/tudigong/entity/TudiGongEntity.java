@@ -1,10 +1,12 @@
 package com.p1nero.tudigong.entity;
 
-import com.p1nero.dialog_lib.api.custom.IEntityNpc;
-import com.p1nero.dialog_lib.api.goal.LookAtConservingPlayerGoal;
-import com.p1nero.dialog_lib.client.screen.DialogueScreenBuilder;
+import com.p1nero.dialog_lib.api.entity.custom.IEntityNpc;
+import com.p1nero.dialog_lib.api.entity.goal.LookAtConservingPlayerGoal;
+import com.p1nero.dialog_lib.client.screen.DialogueScreen;
+import com.p1nero.dialog_lib.client.screen.builder.StreamDialogueScreenBuilder;
 import com.p1nero.dialog_lib.network.DialoguePacketRelay;
 import com.p1nero.tudigong.TDGConfig;
+import com.p1nero.tudigong.TuDiGongMod;
 import com.p1nero.tudigong.block.custom.TuDiTempleBlockEntity;
 import com.p1nero.tudigong.client.screen.BiomeSearchScreen;
 import com.p1nero.tudigong.client.screen.StructureSearchScreen;
@@ -56,7 +58,6 @@ import org.jetbrains.annotations.Nullable;
 
 public class TudiGongEntity extends PathfinderMob implements IEntityNpc {
     private static final Logger LOGGER = LogManager.getLogger();
-    private Player conservingPlayer;
     private static final EntityDataAccessor<Boolean> IS_REMOVED = SynchedEntityData.defineId(TudiGongEntity.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Integer> REMOVE_TIMER = SynchedEntityData.defineId(TudiGongEntity.class, EntityDataSerializers.INT);
     public final int maxRemoveTime = 60;
@@ -197,7 +198,7 @@ public class TudiGongEntity extends PathfinderMob implements IEntityNpc {
                 this.setMarkRemoved();
             }
 
-            if(this.conservingPlayer != null) {
+            if(this.getConversingPlayer() != null) {
                 this.tickCount = maxRemoveTime;//刷新计时
             }
 
@@ -248,18 +249,18 @@ public class TudiGongEntity extends PathfinderMob implements IEntityNpc {
 
     @Override
     @OnlyIn(Dist.CLIENT)
-    public DialogueScreenBuilder getDialogueBuilder(CompoundTag compoundTag) {
-        DialogueScreenBuilder builder = new DialogueScreenBuilder(this);
+    public DialogueScreen getDialogueScreen(CompoundTag compoundTag) {
+        StreamDialogueScreenBuilder builder = new StreamDialogueScreenBuilder(this, TuDiGongMod.MOD_ID);
         if (compoundTag.getBoolean("from_hurt")) {
             builder.start(0)
-                    .addFinalChoice(0);
+                    .addFinalOption(0);
         } else {
             builder.start(1)
-                    .addFinalChoice(1, 2, (dialogueScreen -> Minecraft.getInstance().setScreen(new StructureSearchScreen(this.getId()))))
-                    .addFinalChoice(2, 2, (dialogueScreen -> Minecraft.getInstance().setScreen(new BiomeSearchScreen(this.getId()))))
-                    .addFinalChoice(3, 3);
+                    .addFinalOption(1, 2, (dialogueScreen -> Minecraft.getInstance().setScreen(new StructureSearchScreen(this.getId()))))
+                    .addFinalOption(2, 2, (dialogueScreen -> Minecraft.getInstance().setScreen(new BiomeSearchScreen(this.getId()))))
+                    .addFinalOption(3, 3);
         }
-        return builder;
+        return builder.build();
     }
 
     @Override
@@ -327,16 +328,6 @@ public class TudiGongEntity extends PathfinderMob implements IEntityNpc {
         startTick = this.tickCount;
         level().playSound(null, this.getX(), this.getY(), this.getZ(), SoundEvents.PLAYER_LEVELUP, SoundSource.BLOCKS, 1.0F, 1.0F);
         setMarkRemoved();
-    }
-
-    @Override
-    public void setConversingPlayer(@Nullable Player player) {
-        this.conservingPlayer = player;
-    }
-
-    @Override
-    public @Nullable Player getConversingPlayer() {
-        return conservingPlayer;
     }
 
     @Override
