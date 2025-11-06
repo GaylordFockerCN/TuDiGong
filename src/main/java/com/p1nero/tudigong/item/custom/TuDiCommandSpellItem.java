@@ -38,7 +38,7 @@ public class TuDiCommandSpellItem extends Item {
                 TudiGongEntity tudiGongEntity = TDGEntities.TU_DI_GONG.get().spawn(serverLevel, context.getClickedPos().above(1), MobSpawnType.MOB_SUMMONED);
                 if(context.getPlayer() != null && tudiGongEntity != null) {
                     context.getPlayer().displayClientMessage(ComponentUtils.wrapInSquareBrackets(context.getPlayer().getDisplayName()).append(": ").append(Component.translatable("tip.tudigong.summon")), false);
-                    context.getPlayer().displayClientMessage(ComponentUtils.wrapInSquareBrackets(tudiGongEntity.getDisplayName()).append(": ").append(Component.translatable("entity.tudigong.tudigong.answer1")), false);
+                    context.getPlayer().displayClientMessage(ComponentUtils.wrapInSquareBrackets(tudiGongEntity.getDisplayName()).append(": ").append(Component.translatable("entity.tudigong.tudigong.tudigong.answer1")), false);
                     context.getPlayer().getCooldowns().addCooldown(context.getItemInHand().getItem(), TDGConfig.SPELL_COOLDOWN.get());
                     context.getItemInHand().shrink(1);
                     TuDiGongMod.finishAdvancement(TuDiGongMod.MOD_ID + ":sincerity", (ServerPlayer) context.getPlayer());
