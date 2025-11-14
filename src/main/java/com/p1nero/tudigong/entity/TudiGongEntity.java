@@ -278,13 +278,13 @@ public class TudiGongEntity extends PathfinderMob implements IEntityNpc {
         LOGGER.info("Player {} located {} (isStructure: {}) using term '{}'", serverPlayer.getName().getString(), resourceLocation.toString(), isStructure, originalSearchTerm);
         this.setConversingPlayer(null);
         if (isStructure && TDGConfig.STRUCTURE_BLACKLIST.get().contains(resourceLocation.toString())) {
-            serverPlayer.displayClientMessage(ComponentUtils.wrapInSquareBrackets(this.getDisplayName()).append(": ").append(Component.translatable("entity.tudigong.tudigong.answer5")), false);
+            serverPlayer.displayClientMessage(ComponentUtils.wrapInSquareBrackets(this.getDisplayName()).append(": ").append(Component.translatable("entity.tudigong.tudigong.tudigong.answer5")), false);
             return;
         }
         BlockPos blockpos = isStructure ? StructureUtils.getNearbyStructurePos(serverPlayer, resourceLocation.toString(), -1145) : BiomeUtil.getNearbyBiomePos(serverPlayer, resourceLocation.toString());
         if(blockpos == null) {
             LOGGER.warn("Could not find location for {}, possibly blocked by other mods.", resourceLocation.toString());
-            serverPlayer.displayClientMessage(ComponentUtils.wrapInSquareBrackets(this.getDisplayName()).append(": ").append(Component.translatable("entity.tudigong.tudigong.answer5")), false);
+            serverPlayer.displayClientMessage(ComponentUtils.wrapInSquareBrackets(this.getDisplayName()).append(": ").append(Component.translatable("entity.tudigong.tudigong.tudigong.answer5")), false);
             return;
         }
 
@@ -320,8 +320,8 @@ public class TudiGongEntity extends PathfinderMob implements IEntityNpc {
             level().addFreshEntity(xianQiEntity);
         }
 
-        serverPlayer.displayClientMessage(ComponentUtils.wrapInSquareBrackets(this.getDisplayName()).append(": ").append(Component.translatable("entity.tudigong.tudigong.answer3")), false);
-        serverPlayer.displayClientMessage(ComponentUtils.wrapInSquareBrackets(this.getDisplayName()).append(": ").append(Component.translatable("entity.tudigong.tudigong.answer4")), false);
+        serverPlayer.displayClientMessage(ComponentUtils.wrapInSquareBrackets(this.getDisplayName()).append(": ").append(Component.translatable("entity.tudigong.tudigong.tudigong.answer3")), false);
+        serverPlayer.displayClientMessage(ComponentUtils.wrapInSquareBrackets(this.getDisplayName()).append(": ").append(Component.translatable("entity.tudigong.tudigong.tudigong.answer4")), false);
         from = this.getEyePosition();
         Vec3 target = blockpos.atY((int) this.getEyeY()).getCenter();
         dir = target.subtract(from).normalize();
