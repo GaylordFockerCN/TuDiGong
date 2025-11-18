@@ -74,5 +74,19 @@
   "command.tudigong.help.tag_add": "/tudigong tag add <tagName> <structure> - Добавляет структуру к тегу.",
   "command.tudigong.help.tag_remove": "/tudigong tag remove <tagName> <structure> - Удаляет структуру из тега.",
   "command.tudigong.help.tag_list": "/tudigong tag list <tagName> - Перечисляет структуры в теге.",
-  "command.tudigong.help.tag_list_all": "/tudigong tag list_all - Перечисляет все определенные теги."
+  "command.tudigong.help.tag_list_all": "/tudigong tag list_all - Перечисляет все определенные теги.",
+
+  "error.tudigong.tag_not_found": "Тег не найден или пуст: %s",
+  "error.tudigong.set_not_found": "Набор структур не найден или пуст: %s",
+  "error.tudigong.invalid_resource_location": "Неверное расположение ресурса: %s",
+  "gui.tudigong.search.placeholder": "Поиск по имени, #tag, @modid, или $set...",
+  "gui.tudigong.history.found_at": "Найдено в: ",
+  "gui.tudigong.history.pos_na": "Позиция не применима",
+  "gui.tudigong.history.teleport": "Телепорт",
+  "history.tudigong.type.structure": "[Структура]",
+  "history.tudigong.type.biome": "[Биом]",
+  "gui.tudigong.history.title": "История поиска",
+  "gui.tudigong.history.button": "История",
+  "gui.tudigong.history.clear": "Очистить историю",
+  "gui.tudigong.history.search_placeholder": "Фильтровать историю..."
 }
